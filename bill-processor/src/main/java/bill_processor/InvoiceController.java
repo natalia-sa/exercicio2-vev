@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public class InvoiceController {
 
-    public Invoice create() {
-        return new Invoice(LocalDate.now(), 0.0, "name", "PENDENTE");
+    public Invoice create(LocalDate date, Double totalValue, String customerName) {
+        return new Invoice(date, totalValue, customerName);
     }
 }

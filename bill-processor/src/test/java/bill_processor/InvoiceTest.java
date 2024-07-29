@@ -13,12 +13,16 @@ public class InvoiceTest {
         LocalDate date = LocalDate.now();
         Double totalValue = 10.0;
         String customerName = "Daiane dos Santos";
-        String status = "PENDENTE";
+        InvoiceStatusEnum status = InvoiceStatusEnum.PENDENTE;
 
-        Invoice expectedInvoice = new Invoice(date, totalValue, customerName, status);
+        Invoice expectedInvoice = new Invoice()
+                .setDate(date)
+                .setCustomerName(customerName)
+                .setTotalValue(totalValue)
+                .setStatus(status);
 
         InvoiceController invoiceController = new InvoiceController();
-        Invoice invoice = invoiceController.create();
+        Invoice invoice = invoiceController.create(date, totalValue, customerName);
 
         assertEquals(expectedInvoice, invoice);
     }
