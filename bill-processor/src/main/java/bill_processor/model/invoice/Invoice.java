@@ -1,4 +1,6 @@
-package bill_processor;
+package bill_processor.model.invoice;
+
+import bill_processor.model.invoice.enums.InvoiceStatusEnum;
 
 import java.time.LocalDate;
 import java.util.Objects;

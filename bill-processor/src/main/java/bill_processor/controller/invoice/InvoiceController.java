@@ -1,4 +1,6 @@
-package bill_processor;
+package bill_processor.controller.invoice;
+
+import bill_processor.model.invoice.Invoice;
 
 import java.time.LocalDate;
 
