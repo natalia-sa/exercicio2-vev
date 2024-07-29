@@ -1,5 +1,7 @@
 package bill_processor.controller;
 
+import bill_processor.controller.bill.BillController;
+import bill_processor.model.bill.Bill;
 import org.junit.Test;
 
 import java.time.LocalDate;
