@@ -1,4 +1,4 @@
-package bill_processor;
+package bill_processor.controller;
 
 import bill_processor.controller.invoice.InvoiceController;
 import bill_processor.model.invoice.Invoice;
@@ -9,7 +9,7 @@ import java.time.LocalDate;
 
 import static org.junit.Assert.assertEquals;
 
-public class InvoiceTest {
+public class InvoiceControllerTest {
 
     @Test
     public void shouldCreateInvoice() {
