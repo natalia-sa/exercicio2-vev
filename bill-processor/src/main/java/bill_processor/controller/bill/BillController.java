@@ -7,6 +7,6 @@ import java.time.LocalDate;
 public class BillController {
 
     public Bill create(String code, LocalDate date, Double value) {
-        return new Bill("code", LocalDate.now(), 0.0);
+        return new Bill(code, date, value);
     }
 }
