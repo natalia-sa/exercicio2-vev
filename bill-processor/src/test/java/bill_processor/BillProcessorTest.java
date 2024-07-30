@@ -27,7 +27,7 @@ class BillProcessorTest {
         Payment expectedPayment = new Payment(invoiceValue, paymentDate, paymentType);
 
         BillProcessor billProcessor = new BillProcessor();
-        Payment payment = billProcessor.processPayment(bill, paymentType);
+        Payment payment = billProcessor.payBill(bill, paymentType);
 
         assertEquals(bill.getPayment(), expectedPayment);
         assertEquals(expectedPayment, payment);
@@ -48,15 +48,15 @@ class BillProcessorTest {
         BillProcessor billProcessor = new BillProcessor();
 
         assertThrows(IllegalArgumentException.class, ()->{
-            billProcessor.processPayment(bill, PaymentTypeEnum.BOLETO);
+            billProcessor.payBill(bill, PaymentTypeEnum.BOLETO);
         });
 
         assertThrows(IllegalArgumentException.class, ()->{
-            billProcessor.processPayment(bill, PaymentTypeEnum.CARTAO_CREDITO);
+            billProcessor.payBill(bill, PaymentTypeEnum.CARTAO_CREDITO);
         });
 
         assertThrows(IllegalArgumentException.class, ()->{
-            billProcessor.processPayment(bill, PaymentTypeEnum.TRANSFERENCIA_BANCARIA);
+            billProcessor.payBill(bill, PaymentTypeEnum.TRANSFERENCIA_BANCARIA);
         });
 
         assertNull(bill.getPayment());
@@ -77,7 +77,7 @@ class BillProcessorTest {
         BillProcessor billProcessor = new BillProcessor();
 
         assertThrows(IllegalArgumentException.class, ()->{
-            billProcessor.processPayment(bill, PaymentTypeEnum.CARTAO_CREDITO);
+            billProcessor.payBill(bill, PaymentTypeEnum.CARTAO_CREDITO);
         });
 
         assertNull(bill.getPayment());
@@ -101,7 +101,7 @@ class BillProcessorTest {
         Payment expectedPayment = new Payment(value, date, type);
 
         BillProcessor billProcessor = new BillProcessor();
-        Payment payment = billProcessor.processPayment(bill, type);
+        Payment payment = billProcessor.payBill(bill, type);
 
         assertEquals(expectedPayment, payment);
         assertEquals(bill.getPayment(), expectedPayment);
