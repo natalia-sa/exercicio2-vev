@@ -1,5 +1,6 @@
 package bill_processor;
 
+import bill_processor.exceptions.InvalidBillDataException;
 import bill_processor.model.bill.Bill;
 import bill_processor.model.invoice.Invoice;
 import bill_processor.model.invoice.enums.InvoiceStatusEnum;
@@ -54,15 +55,15 @@ class BillProcessorTest {
 
         Bill bill = new Bill(invoiceWithFutureDate, "billCode", invalidDate, INVOICE_VALUE);
 
-        assertThrows(IllegalArgumentException.class, ()->{
+        assertThrows(InvalidBillDataException.class, ()->{
             billProcessor.payBill(bill, PaymentTypeEnum.BOLETO);
         });
 
-        assertThrows(IllegalArgumentException.class, ()->{
+        assertThrows(InvalidBillDataException.class, ()->{
             billProcessor.payBill(bill, PaymentTypeEnum.CARTAO_CREDITO);
         });
 
-        assertThrows(IllegalArgumentException.class, ()->{
+        assertThrows(InvalidBillDataException.class, ()->{
             billProcessor.payBill(bill, PaymentTypeEnum.TRANSFERENCIA_BANCARIA);
         });
 
@@ -70,13 +71,13 @@ class BillProcessorTest {
     }
 
     @Test
-    @DisplayName("Should not be possible to pay when payment type is artao credito and bill date is not at least 15 days before invoice date")
+    @DisplayName("Should not be possible to pay when payment type is cartao credito and bill date is not at least 15 days before invoice date")
     void shouldNotBePossibleToPayWhenBillHasInvalidDateAndTypeIsCartaoCredito() {
         LocalDate invalidDate = invoiceWithFutureDate.getDate().minusDays(10);
 
         Bill bill = new Bill(invoiceWithFutureDate, "billCode", invalidDate, INVOICE_VALUE);
 
-        assertThrows(IllegalArgumentException.class, ()->{
+        assertThrows(InvalidBillDataException.class, ()->{
             billProcessor.payBill(bill, PaymentTypeEnum.CARTAO_CREDITO);
         });
 

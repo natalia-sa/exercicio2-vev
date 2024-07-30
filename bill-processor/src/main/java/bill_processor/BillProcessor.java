@@ -1,6 +1,7 @@
 package bill_processor;
 
-import bill_processor.services.payment.PaymentService;
+import bill_processor.exceptions.InvalidBillDataException;
+import bill_processor.service.payment.PaymentService;
 import bill_processor.model.bill.Bill;
 import bill_processor.model.invoice.Invoice;
 import bill_processor.model.invoice.enums.InvoiceStatusEnum;
@@ -49,10 +50,8 @@ public class BillProcessor {
         boolean isPaymentTypeCartaoCreditoAndDateIsValid = type.equals(PaymentTypeEnum.CARTAO_CREDITO)
                 && invoiceDateMinus15Days.isBefore(billDate);
 
-        if(isBillDateAfterInvoiceDate) {
-            throw new IllegalArgumentException("Not possible to payBill when bill date is after invoice date");
-        } else if (isPaymentTypeCartaoCreditoAndDateIsValid) {
-            throw new IllegalArgumentException("Not possible to payBill when payment type is cartao de credito and bill date is not at least 15 days before invoice date");
+        if(isBillDateAfterInvoiceDate || isPaymentTypeCartaoCreditoAndDateIsValid) {
+            throw new InvalidBillDataException();
         }
     }
 

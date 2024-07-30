@@ -1,6 +1,7 @@
-package bill_processor.services;
+package bill_processor.service;
 
-import bill_processor.services.payment.PaymentService;
+import bill_processor.exceptions.InvalidPaymentDataException;
+import bill_processor.service.payment.PaymentService;
 import bill_processor.model.payment.Payment;
 import bill_processor.model.payment.enums.PaymentTypeEnum;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,7 +42,7 @@ class PaymentServiceTest {
         LocalDate date = LocalDate.now();
         PaymentTypeEnum type = PaymentTypeEnum.BOLETO;
 
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(InvalidPaymentDataException.class,
                 ()->{
                     paymentService.create(value, date, type);
                 });
@@ -54,7 +55,7 @@ class PaymentServiceTest {
         LocalDate date = LocalDate.now();
         PaymentTypeEnum type = PaymentTypeEnum.BOLETO;
 
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(InvalidPaymentDataException.class,
                 ()->{
                     paymentService.create(value, date, type);
                 });

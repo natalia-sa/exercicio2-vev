@@ -1,6 +1,6 @@
-package bill_processor.services;
+package bill_processor.service;
 
-import bill_processor.services.invoice.InvoiceService;
+import bill_processor.service.invoice.InvoiceService;
 import bill_processor.model.invoice.Invoice;
 import bill_processor.model.invoice.enums.InvoiceStatusEnum;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,6 +1,6 @@
-package bill_processor.services;
+package bill_processor.service;
 
-import bill_processor.services.bill.BillService;
+import bill_processor.service.bill.BillService;
 import bill_processor.model.bill.Bill;
 import bill_processor.model.invoice.Invoice;
 import org.junit.jupiter.api.BeforeEach;

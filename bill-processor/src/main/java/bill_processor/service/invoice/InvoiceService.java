@@ -1,4 +1,4 @@
-package bill_processor.services.invoice;
+package bill_processor.service.invoice;
 
 import bill_processor.model.invoice.Invoice;
 
