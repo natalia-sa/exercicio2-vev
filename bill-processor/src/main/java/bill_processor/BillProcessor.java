@@ -1,6 +1,5 @@
 package bill_processor;
 
-import bill_processor.controller.bill.BillController;
 import bill_processor.controller.payment.PaymentController;
 import bill_processor.model.bill.Bill;
 import bill_processor.model.payment.Payment;
@@ -10,31 +9,42 @@ import java.time.LocalDate;
 
 public class BillProcessor {
 
-    private BillController billController;
-    private PaymentController paymentController;
+    private final PaymentController paymentController;
+
+    public BillProcessor() {
+        this.paymentController = new PaymentController();
+    }
 
     public Payment pay(Bill bill, PaymentTypeEnum type) {
-        if(bill.getDate().isAfter(bill.getInvoice().getDate())) {
-            throw new IllegalArgumentException("Not possible to pay");
+        validatePayment(bill, type);
+
+        Double paymentValue = bill.getValue();
+
+        boolean isTypeBoletoAndPaymentDateIsAfterBillDate = type.equals(PaymentTypeEnum.BOLETO) && LocalDate.now().isAfter(bill.getDate());
+
+        if(isTypeBoletoAndPaymentDateIsAfterBillDate) {
+            paymentValue = bill.getValue() + (bill.getValue() * 0.10);
         }
 
-        if(type.equals(PaymentTypeEnum.CARTAO_CREDITO)
-                && bill.getInvoice().getDate().minusDays(15).isBefore(bill.getDate())) {
-            throw new IllegalArgumentException("Not possible to pay");
-        }
-
-        Payment payment = new Payment()
-                .setDate(LocalDate.now())
-                .setType(type);
-
-        if(type.equals(PaymentTypeEnum.BOLETO) && LocalDate.now().isAfter(bill.getDate())) {
-            Double value = bill.getValue() + (bill.getValue() * 0.10);
-            payment.setValue(value);
-        } else {
-            payment.setValue(bill.getValue());
-        }
-
+        Payment payment = paymentController.create(paymentValue, LocalDate.now(), type);
         bill.setPayment(payment);
+
         return payment;
+    }
+
+    private void validatePayment(Bill bill, PaymentTypeEnum type) {
+        LocalDate invoiceDate = bill.getInvoice().getDate();
+        LocalDate invoiceDateMinus15Days = invoiceDate.minusDays(15);
+        LocalDate billDate = bill.getDate();
+
+        boolean isBillDateAfterInvoiceDate = billDate.isAfter(invoiceDate);
+        boolean isPaymentTypeCartaoCreditoAndDateIsValid = type.equals(PaymentTypeEnum.CARTAO_CREDITO)
+                && invoiceDateMinus15Days.isBefore(billDate);
+
+        if(isBillDateAfterInvoiceDate) {
+            throw new IllegalArgumentException("Not possible to pay when bill date is after invoice date");
+        } else if (isPaymentTypeCartaoCreditoAndDateIsValid) {
+            throw new IllegalArgumentException("Not possible to pay when payment type is cartao de credito and bill date is not at least 15 days before invoice date");
+        }
     }
 }
