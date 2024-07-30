@@ -42,6 +42,22 @@ public class Invoice {
         return this;
     }
 
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public Double getTotalValue() {
+        return totalValue;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public InvoiceStatusEnum getStatus() {
+        return status;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this==o) return true;

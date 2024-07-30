@@ -1,6 +1,7 @@
 package bill_processor.controller.bill;
 
 import bill_processor.model.bill.Bill;
+import bill_processor.model.invoice.Invoice;
 import bill_processor.model.payment.Payment;
 import bill_processor.model.payment.enums.PaymentTypeEnum;
 
@@ -8,11 +9,15 @@ import java.time.LocalDate;
 
 public class BillController {
 
-    public Bill create(String code, LocalDate date, Double value) {
-        return new Bill(code, date, value);
+    public Bill create(Invoice invoice, String code, LocalDate date, Double value) {
+        return new Bill(invoice, code, date, value);
     }
 
     public Payment pay(Bill bill, PaymentTypeEnum type) {
+        if(bill.getDate().isAfter(bill.getInvoice().getDate())) {
+            throw new IllegalArgumentException("Not possible to pay");
+        }
+
         Payment payment = new Payment()
                 .setDate(LocalDate.now())
                 .setType(type);

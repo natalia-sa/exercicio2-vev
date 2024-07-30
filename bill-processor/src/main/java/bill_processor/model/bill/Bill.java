@@ -1,20 +1,23 @@
 package bill_processor.model.bill;
 
+import bill_processor.model.invoice.Invoice;
 import bill_processor.model.payment.Payment;
 
 import java.time.LocalDate;
 import java.util.Objects;
 
 public class Bill {
+    private Invoice invoice;
     private String code;
     private LocalDate date;
     private Double value;
     private Payment payment;
 
-    public Bill(String code, LocalDate date, Double value) {
+    public Bill(Invoice invoice, String code, LocalDate date, Double value) {
         this.code = code;
         this.date = date;
         this.value = value;
+        this.invoice = invoice;
     }
 
     public String getCode() {
@@ -31,6 +34,10 @@ public class Bill {
 
     public Payment getPayment() {
         return payment;
+    }
+
+    public Invoice getInvoice() {
+        return invoice;
     }
 
     public Bill setCode(String code) {
@@ -53,16 +60,21 @@ public class Bill {
         return this;
     }
 
+    public Bill setInvoice(Invoice invoice) {
+        this.invoice = invoice;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this==o) return true;
         if (o==null || getClass()!=o.getClass()) return false;
         Bill bill = (Bill) o;
-        return Objects.equals(code, bill.code) && Objects.equals(date, bill.date) && Objects.equals(value, bill.value) && Objects.equals(payment, bill.payment);
+        return Objects.equals(invoice, bill.invoice) && Objects.equals(code, bill.code) && Objects.equals(date, bill.date) && Objects.equals(value, bill.value) && Objects.equals(payment, bill.payment);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(code, date, value, payment);
+        return Objects.hash(invoice, code, date, value, payment);
     }
 }
