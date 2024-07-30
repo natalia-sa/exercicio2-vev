@@ -1,19 +1,23 @@
 package bill_processor.model.invoice;
 
 import bill_processor.model.invoice.enums.InvoiceStatusEnum;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDate;
-import java.util.Objects;
 
+@Getter
+@EqualsAndHashCode
+@NoArgsConstructor
+@ToString
 public class Invoice {
 
     private LocalDate date;
     private Double totalValue;
     private String customerName;
     private InvoiceStatusEnum status;
-
-    public Invoice() {
-    }
 
     public Invoice(LocalDate date, Double totalValue, String customerName) {
         this.date = date;
@@ -40,34 +44,5 @@ public class Invoice {
     public Invoice setStatus(InvoiceStatusEnum status) {
         this.status = status;
         return this;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public Double getTotalValue() {
-        return totalValue;
-    }
-
-    public String getCustomerName() {
-        return customerName;
-    }
-
-    public InvoiceStatusEnum getStatus() {
-        return status;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this==o) return true;
-        if (o==null || getClass()!=o.getClass()) return false;
-        Invoice invoice = (Invoice) o;
-        return Objects.equals(date, invoice.date) && Objects.equals(totalValue, invoice.totalValue) && Objects.equals(customerName, invoice.customerName) && status==invoice.status;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(date, totalValue, customerName, status);
     }
 }

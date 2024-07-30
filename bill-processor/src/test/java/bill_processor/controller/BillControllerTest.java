@@ -3,8 +3,6 @@ package bill_processor.controller;
 import bill_processor.controller.bill.BillController;
 import bill_processor.model.bill.Bill;
 import bill_processor.model.invoice.Invoice;
-import bill_processor.model.payment.Payment;
-import bill_processor.model.payment.enums.PaymentTypeEnum;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;

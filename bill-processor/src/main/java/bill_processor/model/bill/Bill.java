@@ -2,10 +2,15 @@ package bill_processor.model.bill;
 
 import bill_processor.model.invoice.Invoice;
 import bill_processor.model.payment.Payment;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
 import java.time.LocalDate;
-import java.util.Objects;
 
+@Getter
+@EqualsAndHashCode
+@ToString
 public class Bill {
     private Invoice invoice;
     private String code;
@@ -18,26 +23,6 @@ public class Bill {
         this.date = date;
         this.value = value;
         this.invoice = invoice;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public Double getValue() {
-        return value;
-    }
-
-    public Payment getPayment() {
-        return payment;
-    }
-
-    public Invoice getInvoice() {
-        return invoice;
     }
 
     public Bill setCode(String code) {
@@ -65,16 +50,4 @@ public class Bill {
         return this;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this==o) return true;
-        if (o==null || getClass()!=o.getClass()) return false;
-        Bill bill = (Bill) o;
-        return Objects.equals(invoice, bill.invoice) && Objects.equals(code, bill.code) && Objects.equals(date, bill.date) && Objects.equals(value, bill.value) && Objects.equals(payment, bill.payment);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(invoice, code, date, value, payment);
-    }
 }
