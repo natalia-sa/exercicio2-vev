@@ -2,17 +2,24 @@ package bill_processor;
 
 import bill_processor.controller.payment.PaymentController;
 import bill_processor.model.bill.Bill;
+import bill_processor.model.invoice.Invoice;
 import bill_processor.model.payment.Payment;
 import bill_processor.model.payment.enums.PaymentTypeEnum;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class BillProcessor {
 
+    private final Map<Invoice, List<Bill>> invoices;
     private final PaymentController paymentController;
 
     public BillProcessor() {
         this.paymentController = new PaymentController();
+        this.invoices = new HashMap<>();
     }
 
     public Payment payBill(Bill bill, PaymentTypeEnum type) {
@@ -46,5 +53,13 @@ public class BillProcessor {
         } else if (isPaymentTypeCartaoCreditoAndDateIsValid) {
             throw new IllegalArgumentException("Not possible to payBill when payment type is cartao de credito and bill date is not at least 15 days before invoice date");
         }
+    }
+
+    public void processBills(List<Bill> bills) {
+        bills.forEach(bill -> {
+            Invoice invoice = bill.getInvoice();
+            this.invoices.putIfAbsent(invoice, new ArrayList<>());
+            this.invoices.get(invoice).add(bill);
+        });
     }
 }
