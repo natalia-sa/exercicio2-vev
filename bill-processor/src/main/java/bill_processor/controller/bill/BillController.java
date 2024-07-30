@@ -18,6 +18,11 @@ public class BillController {
             throw new IllegalArgumentException("Not possible to pay");
         }
 
+        if(type.equals(PaymentTypeEnum.CARTAO_CREDITO)
+                && bill.getInvoice().getDate().minusDays(15).isBefore(bill.getDate())) {
+            throw new IllegalArgumentException("Not possible to pay");
+        }
+
         Payment payment = new Payment()
                 .setDate(LocalDate.now())
                 .setType(type);
