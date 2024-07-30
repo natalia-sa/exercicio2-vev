@@ -6,10 +6,10 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 public class Bill {
-
     private String code;
     private LocalDate date;
     private Double value;
+    private Payment payment;
 
     public Bill(String code, LocalDate date, Double value) {
         this.code = code;
@@ -29,16 +29,40 @@ public class Bill {
         return value;
     }
 
+    public Payment getPayment() {
+        return payment;
+    }
+
+    public Bill setCode(String code) {
+        this.code = code;
+        return this;
+    }
+
+    public Bill setDate(LocalDate date) {
+        this.date = date;
+        return this;
+    }
+
+    public Bill setValue(Double value) {
+        this.value = value;
+        return this;
+    }
+
+    public Bill setPayment(Payment payment) {
+        this.payment = payment;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this==o) return true;
         if (o==null || getClass()!=o.getClass()) return false;
         Bill bill = (Bill) o;
-        return Objects.equals(code, bill.code) && Objects.equals(date, bill.date) && Objects.equals(value, bill.value);
+        return Objects.equals(code, bill.code) && Objects.equals(date, bill.date) && Objects.equals(value, bill.value) && Objects.equals(payment, bill.payment);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(code, date, value);
+        return Objects.hash(code, date, value, payment);
     }
 }

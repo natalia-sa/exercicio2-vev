@@ -24,6 +24,7 @@ public class BillController {
             payment.setValue(bill.getValue());
         }
 
+        bill.setPayment(payment);
         return payment;
     }
 }

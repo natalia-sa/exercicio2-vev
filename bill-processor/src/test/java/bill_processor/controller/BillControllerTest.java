@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class BillControllerTest {
 
@@ -17,14 +18,14 @@ class BillControllerTest {
         String code = "code";
         LocalDate date = LocalDate.now();
         Double value = 30.0;
-        Payment payment = null;
 
-        Bill expectedBill = new Bill(code, date, value, payment);
+        Bill expectedBill = new Bill(code, date, value);
 
         BillController billController = new BillController();
         Bill bill = billController.create(code, date, value);
 
         assertEquals(expectedBill, bill);
+        assertNull(expectedBill.getPayment());
     }
 
     @Test
@@ -32,14 +33,12 @@ class BillControllerTest {
         String code = "code";
         LocalDate billDate = LocalDate.now();
         Double value = 30.0;
-        Bill bill = new Bill(code, billDate, value, null);
+        Bill bill = new Bill(code, billDate, value);
 
-        Double paymentValue = value;
         LocalDate date = LocalDate.now();
         PaymentTypeEnum type = PaymentTypeEnum.BOLETO;
 
         Payment expectedPayment = new Payment(value, date, type);
-
 
         BillController billController = new BillController();
         Payment payment = billController.pay(bill, type);
