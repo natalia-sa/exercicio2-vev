@@ -106,4 +106,19 @@ class BillProcessorTest {
         assertEquals(expectedPayment, payment);
         assertEquals(bill.getPayment(), expectedPayment);
     }
+
+    @Test
+    void shouldProcessEmptyListOfBills() {
+
+    }
+
+    @Test
+    void shouldProcessListOfBillsPayingTotalInvoiceValue() {
+
+    }
+
+    @Test
+    void shouldProcessListOfBillsNotPayingTotalInvoiceValue() {
+
+    }
 }
