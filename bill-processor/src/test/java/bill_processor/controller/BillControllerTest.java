@@ -1,15 +1,16 @@
 package bill_processor.controller;
 
 import bill_processor.controller.bill.BillController;
+import bill_processor.controller.payment.PaymentController;
 import bill_processor.model.bill.Bill;
+import bill_processor.model.invoice.Invoice;
 import bill_processor.model.payment.Payment;
 import bill_processor.model.payment.enums.PaymentTypeEnum;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 class BillControllerTest {
 
@@ -44,6 +45,26 @@ class BillControllerTest {
         Payment payment = billController.pay(bill, type);
 
         assertEquals(bill.getPayment(), payment);
+    }
+
+    @Test
+    void shouldNotBePossibleToPayWhenBillDateIsAfterInvoiceDate() {
+        Invoice invoice = new Invoice(LocalDate.now(), 30.0, "customer");
+        Bill bill = new Bill("Code", LocalDate.now().plusDays(1), 30.0);
+
+        BillController billController = new BillController();
+
+        assertThrows(IllegalArgumentException.class, ()->{
+                    billController.pay(bill, PaymentTypeEnum.BOLETO);
+                });
+
+        assertThrows(IllegalArgumentException.class, ()->{
+                    billController.pay(bill, PaymentTypeEnum.CARTAO_CREDITO);
+                });
+
+        assertThrows(IllegalArgumentException.class, ()->{
+                    billController.pay(bill, PaymentTypeEnum.TRANSFERENCIA_BANCARIA);
+                });
     }
 
     @Test
