@@ -18,6 +18,8 @@ public class BillProcessor {
 
     private final Map<Invoice, List<Bill>> invoices;
     private final PaymentService paymentService;
+    private static final Double BOLETO_FEE = 0.10;
+    private static final int MINIMUM_DAYS_IN_ADVANCE_TO_PAY_WITH_CARTAO_CREDITO = 15;
 
     public BillProcessor() {
         this.paymentService = new PaymentService();
@@ -29,10 +31,11 @@ public class BillProcessor {
 
         Double paymentValue = bill.getValue();
 
-        boolean isTypeBoletoAndPaymentDateIsAfterBillDate = type.equals(PaymentTypeEnum.BOLETO) && LocalDate.now().isAfter(bill.getDate());
+        boolean isTypeBoletoAndPaymentDateIsAfterBillDate = type.equals(PaymentTypeEnum.BOLETO)
+                && LocalDate.now().isAfter(bill.getDate());
 
         if(isTypeBoletoAndPaymentDateIsAfterBillDate) {
-            paymentValue = bill.getValue() + (bill.getValue() * 0.10);
+            paymentValue = bill.getValue() + (bill.getValue() * BOLETO_FEE);
         }
 
         Payment payment = paymentService.create(paymentValue, LocalDate.now(), type);
@@ -43,7 +46,7 @@ public class BillProcessor {
 
     private void validatePayment(Bill bill, PaymentTypeEnum type) {
         LocalDate invoiceDate = bill.getInvoice().getDate();
-        LocalDate invoiceDateMinus15Days = invoiceDate.minusDays(15);
+        LocalDate invoiceDateMinus15Days = invoiceDate.minusDays(MINIMUM_DAYS_IN_ADVANCE_TO_PAY_WITH_CARTAO_CREDITO);
         LocalDate billDate = bill.getDate();
 
         boolean isBillDateAfterInvoiceDate = billDate.isAfter(invoiceDate);
