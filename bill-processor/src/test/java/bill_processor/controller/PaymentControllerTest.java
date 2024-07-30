@@ -1,5 +1,8 @@
 package bill_processor.controller;
 
+import bill_processor.controller.payment.PaymentController;
+import bill_processor.model.payment.Payment;
+import bill_processor.model.payment.enums.PaymentTypeEnum;
 import org.junit.Test;
 
 import java.time.LocalDate;
@@ -12,7 +15,7 @@ public class PaymentControllerTest {
     public void shouldCreatePayment() {
         Double value = 2.0;
         LocalDate date = LocalDate.now();
-        String type = "BOLETO";
+        PaymentTypeEnum type = PaymentTypeEnum.BOLETO;
 
         Payment expectedPayment = new Payment(value, date, type);
         PaymentController paymentController = new PaymentController();
