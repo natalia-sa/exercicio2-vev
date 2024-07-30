@@ -2,11 +2,14 @@ package bill_processor;
 
 import bill_processor.model.bill.Bill;
 import bill_processor.model.invoice.Invoice;
+import bill_processor.model.invoice.enums.InvoiceStatusEnum;
 import bill_processor.model.payment.Payment;
 import bill_processor.model.payment.enums.PaymentTypeEnum;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -109,16 +112,73 @@ class BillProcessorTest {
 
     @Test
     void shouldProcessEmptyListOfBills() {
+        Invoice invoice = new Invoice(LocalDate.now(), 30.0, "customer");
 
+        List<Bill> bills = new ArrayList<>();
+        BillProcessor billProcessor = new BillProcessor();
+
+        billProcessor.processBills(bills);
+
+        assertEquals(InvoiceStatusEnum.PENDENTE, invoice.getStatus());
     }
 
     @Test
     void shouldProcessListOfBillsPayingTotalInvoiceValue() {
+        Invoice invoice = new Invoice(LocalDate.now().plusDays(2), 30.0, "customer");
 
+        Bill bill1 = new Bill(invoice, "code", LocalDate.now(), 15.0);
+        Bill bill2 = new Bill(invoice, "code2", LocalDate.now(), 15.0);
+
+        BillProcessor billProcessor = new BillProcessor();
+        billProcessor.payBill(bill1, PaymentTypeEnum.BOLETO);
+        billProcessor.payBill(bill2, PaymentTypeEnum.BOLETO);
+
+        List<Bill> bills = new ArrayList<>();
+        bills.add(bill1);
+        bills.add(bill2);
+
+        billProcessor.processBills(bills);
+
+        assertEquals(InvoiceStatusEnum.PAGA, invoice.getStatus());
     }
 
     @Test
     void shouldProcessListOfBillsNotPayingTotalInvoiceValue() {
+        Invoice invoice = new Invoice(LocalDate.now().plusDays(2), 30.0, "customer");
 
+        Bill bill1 = new Bill(invoice, "code", LocalDate.now(), 15.0);
+        Bill bill2 = new Bill(invoice, "code2", LocalDate.now(), 14.0);
+
+        BillProcessor billProcessor = new BillProcessor();
+        billProcessor.payBill(bill1, PaymentTypeEnum.BOLETO);
+        billProcessor.payBill(bill2, PaymentTypeEnum.BOLETO);
+
+        List<Bill> bills = new ArrayList<>();
+        bills.add(bill1);
+        bills.add(bill2);
+
+        billProcessor.processBills(bills);
+
+        assertEquals(InvoiceStatusEnum.PENDENTE, invoice.getStatus());
+    }
+
+    @Test
+    void shouldProcessListOfBillsPayingMoreThanTotalInvoiceValue() {
+        Invoice invoice = new Invoice(LocalDate.now().plusDays(2), 30.0, "customer");
+
+        Bill bill1 = new Bill(invoice, "code", LocalDate.now(), 15.0);
+        Bill bill2 = new Bill(invoice, "code2", LocalDate.now(), 16.0);
+
+        BillProcessor billProcessor = new BillProcessor();
+        billProcessor.payBill(bill1, PaymentTypeEnum.BOLETO);
+        billProcessor.payBill(bill2, PaymentTypeEnum.BOLETO);
+
+        List<Bill> bills = new ArrayList<>();
+        bills.add(bill1);
+        bills.add(bill2);
+
+        billProcessor.processBills(bills);
+
+        assertEquals(InvoiceStatusEnum.PAGA, invoice.getStatus());
     }
 }
