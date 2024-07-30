@@ -8,7 +8,7 @@ import java.time.LocalDate;
 public class PaymentController {
 
     public Payment create(Double value, LocalDate date, PaymentTypeEnum type) {
-        if(type.equals(PaymentTypeEnum.BOLETO) && value < 0.01) {
+        if(type.equals(PaymentTypeEnum.BOLETO) && (value < 0.01 || value > 5000)) {
             throw new IllegalArgumentException("Invalid value");
         }
 
