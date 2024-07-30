@@ -1,5 +1,7 @@
 package bill_processor.model.bill;
 
+import bill_processor.model.payment.Payment;
+
 import java.time.LocalDate;
 import java.util.Objects;
 

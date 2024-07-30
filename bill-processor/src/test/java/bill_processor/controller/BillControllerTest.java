@@ -17,13 +17,34 @@ class BillControllerTest {
         String code = "code";
         LocalDate date = LocalDate.now();
         Double value = 30.0;
+        Payment payment = null;
 
-        Bill expectedBill = new Bill(code, date, value);
+        Bill expectedBill = new Bill(code, date, value, payment);
 
         BillController billController = new BillController();
         Bill bill = billController.create(code, date, value);
 
         assertEquals(expectedBill, bill);
+    }
+
+    @Test
+    void shouldPayBill() {
+        String code = "code";
+        LocalDate billDate = LocalDate.now();
+        Double value = 30.0;
+        Bill bill = new Bill(code, billDate, value, null);
+
+        Double paymentValue = value;
+        LocalDate date = LocalDate.now();
+        PaymentTypeEnum type = PaymentTypeEnum.BOLETO;
+
+        Payment expectedPayment = new Payment(value, date, type);
+
+
+        BillController billController = new BillController();
+        Payment payment = billController.pay(bill, type);
+
+        assertEquals(bill.getPayment(), payment);
     }
 
     @Test
