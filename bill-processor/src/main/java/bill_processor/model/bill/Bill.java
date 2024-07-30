@@ -15,6 +15,18 @@ public class Bill {
         this.value = value;
     }
 
+    public String getCode() {
+        return code;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public Double getValue() {
+        return value;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this==o) return true;

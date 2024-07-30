@@ -1,7 +1,6 @@
 package bill_processor.controller;
 
 import bill_processor.controller.bill.BillController;
-import bill_processor.controller.payment.PaymentController;
 import bill_processor.model.bill.Bill;
 import bill_processor.model.payment.Payment;
 import bill_processor.model.payment.enums.PaymentTypeEnum;
@@ -34,7 +33,7 @@ class BillControllerTest {
         Double billValue = 30.0;
         Bill bill = new Bill(code, billDate, billValue);
 
-        Double value = 33.0;
+        Double value = billValue + (billValue * 0.10);
         LocalDate date = LocalDate.now();
         PaymentTypeEnum type = PaymentTypeEnum.BOLETO;
 

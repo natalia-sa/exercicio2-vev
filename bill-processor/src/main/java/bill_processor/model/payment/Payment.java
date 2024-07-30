@@ -11,10 +11,40 @@ public class Payment {
     private LocalDate date;
     private PaymentTypeEnum type;
 
+    public Payment() {
+    }
+
     public Payment(Double value, LocalDate date, PaymentTypeEnum type) {
         this.value = value;
         this.date = date;
         this.type = type;
+    }
+
+    public Payment setValue(Double value) {
+        this.value = value;
+        return this;
+    }
+
+    public Payment setDate(LocalDate date) {
+        this.date = date;
+        return this;
+    }
+
+    public Payment setType(PaymentTypeEnum type) {
+        this.type = type;
+        return this;
+    }
+
+    public Double getValue() {
+        return value;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public PaymentTypeEnum getType() {
+        return type;
     }
 
     @Override
@@ -28,5 +58,14 @@ public class Payment {
     @Override
     public int hashCode() {
         return Objects.hash(value, date, type);
+    }
+
+    @Override
+    public String toString() {
+        return "Payment{" +
+                "value=" + value +
+                ", date=" + date +
+                ", type=" + type +
+                '}';
     }
 }
