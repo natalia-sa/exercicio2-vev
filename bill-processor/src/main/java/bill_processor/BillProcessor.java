@@ -15,7 +15,7 @@ public class BillProcessor {
         this.paymentController = new PaymentController();
     }
 
-    public Payment pay(Bill bill, PaymentTypeEnum type) {
+    public Payment processPayment(Bill bill, PaymentTypeEnum type) {
         validatePayment(bill, type);
 
         Double paymentValue = bill.getValue();
@@ -42,9 +42,9 @@ public class BillProcessor {
                 && invoiceDateMinus15Days.isBefore(billDate);
 
         if(isBillDateAfterInvoiceDate) {
-            throw new IllegalArgumentException("Not possible to pay when bill date is after invoice date");
+            throw new IllegalArgumentException("Not possible to processPayment when bill date is after invoice date");
         } else if (isPaymentTypeCartaoCreditoAndDateIsValid) {
-            throw new IllegalArgumentException("Not possible to pay when payment type is cartao de credito and bill date is not at least 15 days before invoice date");
+            throw new IllegalArgumentException("Not possible to processPayment when payment type is cartao de credito and bill date is not at least 15 days before invoice date");
         }
     }
 }
