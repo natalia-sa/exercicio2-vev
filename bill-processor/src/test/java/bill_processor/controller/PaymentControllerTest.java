@@ -38,4 +38,18 @@ class PaymentControllerTest {
                    paymentController.create(value, date, type);
                 });
     }
+
+    @Test
+    void shouldThrowExceptionWhenTypeIsBoletoAndValueIsBiggerThenMaximum() {
+        Double value = 5001.0;
+        LocalDate date = LocalDate.now();
+        PaymentTypeEnum type = PaymentTypeEnum.BOLETO;
+
+        PaymentController paymentController = new PaymentController();
+
+        assertThrows(IllegalArgumentException.class,
+                ()->{
+                    paymentController.create(value, date, type);
+                });
+    }
 }
