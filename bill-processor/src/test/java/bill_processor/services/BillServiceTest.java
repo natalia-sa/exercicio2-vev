@@ -1,6 +1,6 @@
-package bill_processor.controller;
+package bill_processor.services;
 
-import bill_processor.controller.bill.BillController;
+import bill_processor.services.bill.BillService;
 import bill_processor.model.bill.Bill;
 import bill_processor.model.invoice.Invoice;
 import org.junit.jupiter.api.Test;
@@ -9,7 +9,7 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class BillControllerTest {
+class BillServiceTest {
 
     @Test
     void shouldCreateBill() {
@@ -20,8 +20,8 @@ class BillControllerTest {
 
         Bill expectedBill = new Bill(invoice, code, date, value);
 
-        BillController billController = new BillController();
-        Bill bill = billController.create(invoice, code, date, value);
+        BillService billService = new BillService();
+        Bill bill = billService.create(invoice, code, date, value);
 
         assertEquals(expectedBill, bill);
         assertNull(expectedBill.getPayment());

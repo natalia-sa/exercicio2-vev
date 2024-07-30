@@ -1,6 +1,6 @@
 package bill_processor;
 
-import bill_processor.controller.payment.PaymentController;
+import bill_processor.services.payment.PaymentService;
 import bill_processor.model.bill.Bill;
 import bill_processor.model.invoice.Invoice;
 import bill_processor.model.invoice.enums.InvoiceStatusEnum;
@@ -16,10 +16,10 @@ import java.util.Map;
 public class BillProcessor {
 
     private final Map<Invoice, List<Bill>> invoices;
-    private final PaymentController paymentController;
+    private final PaymentService paymentService;
 
     public BillProcessor() {
-        this.paymentController = new PaymentController();
+        this.paymentService = new PaymentService();
         this.invoices = new HashMap<>();
     }
 
@@ -34,7 +34,7 @@ public class BillProcessor {
             paymentValue = bill.getValue() + (bill.getValue() * 0.10);
         }
 
-        Payment payment = paymentController.create(paymentValue, LocalDate.now(), type);
+        Payment payment = paymentService.create(paymentValue, LocalDate.now(), type);
         bill.setPayment(payment);
 
         return payment;

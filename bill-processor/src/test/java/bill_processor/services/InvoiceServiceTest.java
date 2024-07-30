@@ -1,6 +1,6 @@
-package bill_processor.controller;
+package bill_processor.services;
 
-import bill_processor.controller.invoice.InvoiceController;
+import bill_processor.services.invoice.InvoiceService;
 import bill_processor.model.invoice.Invoice;
 import bill_processor.model.invoice.enums.InvoiceStatusEnum;
 import org.junit.jupiter.api.Test;
@@ -9,7 +9,7 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class InvoiceControllerTest {
+class InvoiceServiceTest {
 
     @Test
     void shouldCreateInvoice() {
@@ -24,8 +24,8 @@ class InvoiceControllerTest {
                 .setTotalValue(totalValue)
                 .setStatus(status);
 
-        InvoiceController invoiceController = new InvoiceController();
-        Invoice invoice = invoiceController.create(date, totalValue, customerName);
+        InvoiceService invoiceService = new InvoiceService();
+        Invoice invoice = invoiceService.create(date, totalValue, customerName);
 
         assertEquals(expectedInvoice, invoice);
     }

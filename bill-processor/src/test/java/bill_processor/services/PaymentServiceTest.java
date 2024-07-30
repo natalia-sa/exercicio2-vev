@@ -1,6 +1,6 @@
-package bill_processor.controller;
+package bill_processor.services;
 
-import bill_processor.controller.payment.PaymentController;
+import bill_processor.services.payment.PaymentService;
 import bill_processor.model.payment.Payment;
 import bill_processor.model.payment.enums.PaymentTypeEnum;
 import org.junit.jupiter.api.Test;
@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class PaymentControllerTest {
+class PaymentServiceTest {
 
     @Test
     void shouldCreatePayment() {
@@ -19,8 +19,8 @@ class PaymentControllerTest {
         PaymentTypeEnum type = PaymentTypeEnum.BOLETO;
 
         Payment expectedPayment = new Payment(value, date, type);
-        PaymentController paymentController = new PaymentController();
-        Payment payment = paymentController.create(value, date, type);
+        PaymentService paymentService = new PaymentService();
+        Payment payment = paymentService.create(value, date, type);
 
         assertEquals(expectedPayment, payment);
     }
@@ -31,11 +31,11 @@ class PaymentControllerTest {
         LocalDate date = LocalDate.now();
         PaymentTypeEnum type = PaymentTypeEnum.BOLETO;
 
-        PaymentController paymentController = new PaymentController();
+        PaymentService paymentService = new PaymentService();
 
         assertThrows(IllegalArgumentException.class,
                 ()->{
-                   paymentController.create(value, date, type);
+                    paymentService.create(value, date, type);
                 });
     }
 
@@ -45,11 +45,11 @@ class PaymentControllerTest {
         LocalDate date = LocalDate.now();
         PaymentTypeEnum type = PaymentTypeEnum.BOLETO;
 
-        PaymentController paymentController = new PaymentController();
+        PaymentService paymentService = new PaymentService();
 
         assertThrows(IllegalArgumentException.class,
                 ()->{
-                    paymentController.create(value, date, type);
+                    paymentService.create(value, date, type);
                 });
     }
 
