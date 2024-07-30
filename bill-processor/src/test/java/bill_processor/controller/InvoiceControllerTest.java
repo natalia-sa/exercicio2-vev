@@ -3,16 +3,16 @@ package bill_processor.controller;
 import bill_processor.controller.invoice.InvoiceController;
 import bill_processor.model.invoice.Invoice;
 import bill_processor.model.invoice.enums.InvoiceStatusEnum;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class InvoiceControllerTest {
+class InvoiceControllerTest {
 
     @Test
-    public void shouldCreateInvoice() {
+    void shouldCreateInvoice() {
         LocalDate date = LocalDate.now();
         Double totalValue = 10.0;
         String customerName = "Daiane dos Santos";

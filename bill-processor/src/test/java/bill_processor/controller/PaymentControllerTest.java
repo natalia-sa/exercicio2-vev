@@ -3,16 +3,17 @@ package bill_processor.controller;
 import bill_processor.controller.payment.PaymentController;
 import bill_processor.model.payment.Payment;
 import bill_processor.model.payment.enums.PaymentTypeEnum;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class PaymentControllerTest {
+class PaymentControllerTest {
 
     @Test
-    public void shouldCreatePayment() {
+    void shouldCreatePayment() {
         Double value = 2.0;
         LocalDate date = LocalDate.now();
         PaymentTypeEnum type = PaymentTypeEnum.BOLETO;
@@ -22,5 +23,19 @@ public class PaymentControllerTest {
         Payment payment = paymentController.create(value, date, type);
 
         assertEquals(expectedPayment, payment);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenTypeIsBoletoAndValueIsInferiorToMinimum() {
+        Double value = 0.001;
+        LocalDate date = LocalDate.now();
+        PaymentTypeEnum type = PaymentTypeEnum.BOLETO;
+
+        PaymentController paymentController = new PaymentController();
+
+        assertThrows(IllegalArgumentException.class,
+                ()->{
+                   paymentController.create(value, date, type);
+                });
     }
 }
