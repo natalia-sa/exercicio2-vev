@@ -69,6 +69,18 @@ class BillControllerTest {
     }
 
     @Test
+    void shouldNotBePossibleToPayWhenBillDateIsInvalidAndTypeIsCartaoCredito() {
+        Invoice invoice = new Invoice(LocalDate.now(), 30.0, "customer");
+        Bill bill = new Bill(invoice, "Code", LocalDate.now(), 30.0);
+
+        BillController billController = new BillController();
+
+        assertThrows(IllegalArgumentException.class, ()->{
+            billController.pay(bill, PaymentTypeEnum.CARTAO_CREDITO);
+        });
+    }
+
+    @Test
     void shouldIncrementPaymentValueIfTypeIsBoletoAndDateIsBiggerThanBillDate() {
         Invoice invoice = new Invoice(LocalDate.now(), 30.0, "name");
         String code = "code";
