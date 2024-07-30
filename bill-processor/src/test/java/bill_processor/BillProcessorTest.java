@@ -5,6 +5,8 @@ import bill_processor.model.invoice.Invoice;
 import bill_processor.model.invoice.enums.InvoiceStatusEnum;
 import bill_processor.model.payment.Payment;
 import bill_processor.model.payment.enums.PaymentTypeEnum;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -15,21 +17,30 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class BillProcessorTest {
 
-    @Test
-    void shouldPayBillWhenDataIsValid() {
-        LocalDate invoiceDate = LocalDate.now().plusDays(2);
-        Double invoiceValue = 30.0;
-        String customerName = "Daiane dos Santos";
-        Invoice invoice = new Invoice(invoiceDate, invoiceValue, customerName);
+    private BillProcessor billProcessor;
+    private Invoice invoiceWithFutureDate;
+    private static final Double INVOICE_VALUE = 30.0;
 
-        String billCode = "code";
-        Bill bill = new Bill(invoice, billCode, invoiceDate, invoiceValue);
+    @BeforeEach
+    void setUp() {
+        billProcessor = new BillProcessor();
+        LocalDate invoiceFutureDate = LocalDate.now().plusDays(2);
+        invoiceWithFutureDate = new Invoice(invoiceFutureDate, INVOICE_VALUE, "Daiane dos Santos");
+    }
+
+    @Test
+    @DisplayName("Should pay bill with success when data is valid")
+    void shouldPayBillWhenDataIsValid() {
+        Bill bill = new Bill(
+                invoiceWithFutureDate,
+                "billCode",
+                invoiceWithFutureDate.getDate(),
+                INVOICE_VALUE);
 
         PaymentTypeEnum paymentType = PaymentTypeEnum.BOLETO;
         LocalDate paymentDate = LocalDate.now();
-        Payment expectedPayment = new Payment(invoiceValue, paymentDate, paymentType);
+        Payment expectedPayment = new Payment(invoiceWithFutureDate.getTotalValue(), paymentDate, paymentType);
 
-        BillProcessor billProcessor = new BillProcessor();
         Payment payment = billProcessor.payBill(bill, paymentType);
 
         assertEquals(bill.getPayment(), expectedPayment);
@@ -37,18 +48,11 @@ class BillProcessorTest {
     }
 
     @Test
+    @DisplayName("Should throw exception when trying to pay a bill which date is after invoice date with every payment type")
     void shouldNotBePossibleToPayWhenBillDateIsAfterInvoiceDate() {
-        LocalDate invoiceDate = LocalDate.now().minusDays(2);
-        Double invoiceValue = 30.0;
-        String customerName = "Daiane dos Santos";
-        Invoice invoice = new Invoice(invoiceDate, invoiceValue, customerName);
+        LocalDate invalidDate = invoiceWithFutureDate.getDate().plusDays(2);
 
-        LocalDate billDate = LocalDate.now().plusDays(1);
-        String billCOde = "code";
-
-        Bill bill = new Bill(invoice, billCOde, billDate, invoiceValue);
-
-        BillProcessor billProcessor = new BillProcessor();
+        Bill bill = new Bill(invoiceWithFutureDate, "billCode", invalidDate, INVOICE_VALUE);
 
         assertThrows(IllegalArgumentException.class, ()->{
             billProcessor.payBill(bill, PaymentTypeEnum.BOLETO);
@@ -65,19 +69,12 @@ class BillProcessorTest {
         assertNull(bill.getPayment());
     }
 
-    // Bill date be at least 15 days before invoice date
     @Test
+    @DisplayName("Should not be possible to pay when payment type is artao credito and bill date is not at least 15 days before invoice date")
     void shouldNotBePossibleToPayWhenBillHasInvalidDateAndTypeIsCartaoCredito() {
-        LocalDate invoiceDate = LocalDate.now();
-        Double invoiceValue = 30.0;
-        String customerName = "Daiane dos Santos";
-        Invoice invoice = new Invoice(invoiceDate, invoiceValue, customerName);
+        LocalDate invalidDate = invoiceWithFutureDate.getDate().minusDays(10);
 
-        String billCode = "code";
-        LocalDate billDate = invoiceDate.minusDays(10);
-        Bill bill = new Bill(invoice, billCode, billDate, invoiceValue);
-
-        BillProcessor billProcessor = new BillProcessor();
+        Bill bill = new Bill(invoiceWithFutureDate, "billCode", invalidDate, INVOICE_VALUE);
 
         assertThrows(IllegalArgumentException.class, ()->{
             billProcessor.payBill(bill, PaymentTypeEnum.CARTAO_CREDITO);
@@ -87,23 +84,17 @@ class BillProcessorTest {
     }
 
     @Test
+    @DisplayName("Should make payment adding 10% to payment value when payment type is boleto and date is bigger than bill date")
     void shouldIncrementPaymentValueIfTypeIsBoletoAndDateIsBiggerThanBillDate() {
-        LocalDate invoiceDate = LocalDate.now();
-        Double invoiceValue = 30.0;
-        String customerName = "Daiane dos Santos";
-        Invoice invoice = new Invoice(invoiceDate, invoiceValue, customerName);
+        LocalDate billDate = invoiceWithFutureDate.getDate().minusDays(5);
+        Bill bill = new Bill(invoiceWithFutureDate, "code", billDate, INVOICE_VALUE);
 
-        String code = "code";
-        LocalDate billDate = invoiceDate.minusDays(2);
-        Bill bill = new Bill(invoice, code, billDate, invoiceValue);
-
-        Double value = invoiceValue + (invoiceValue * 0.10);
+        Double updatedValue = INVOICE_VALUE + (INVOICE_VALUE * 0.10);
         LocalDate date = LocalDate.now();
         PaymentTypeEnum type = PaymentTypeEnum.BOLETO;
 
-        Payment expectedPayment = new Payment(value, date, type);
+        Payment expectedPayment = new Payment(updatedValue, date, type);
 
-        BillProcessor billProcessor = new BillProcessor();
         Payment payment = billProcessor.payBill(bill, type);
 
         assertEquals(expectedPayment, payment);
@@ -111,25 +102,22 @@ class BillProcessorTest {
     }
 
     @Test
+    @DisplayName("Should process empty list of bills")
     void shouldProcessEmptyListOfBills() {
-        Invoice invoice = new Invoice(LocalDate.now(), 30.0, "customer");
-
         List<Bill> bills = new ArrayList<>();
-        BillProcessor billProcessor = new BillProcessor();
 
         billProcessor.processBills(bills);
 
-        assertEquals(InvoiceStatusEnum.PENDENTE, invoice.getStatus());
+        assertEquals(InvoiceStatusEnum.PENDENTE, invoiceWithFutureDate.getStatus());
     }
 
     @Test
+    @DisplayName("Should process bills updating invoice status when total value was paid")
     void shouldProcessListOfBillsPayingTotalInvoiceValue() {
-        Invoice invoice = new Invoice(LocalDate.now().plusDays(2), 30.0, "customer");
+        Double value = INVOICE_VALUE / 2;
+        Bill bill1 = new Bill(invoiceWithFutureDate, "code", LocalDate.now(), value);
+        Bill bill2 = new Bill(invoiceWithFutureDate, "code2", LocalDate.now(), value);
 
-        Bill bill1 = new Bill(invoice, "code", LocalDate.now(), 15.0);
-        Bill bill2 = new Bill(invoice, "code2", LocalDate.now(), 15.0);
-
-        BillProcessor billProcessor = new BillProcessor();
         billProcessor.payBill(bill1, PaymentTypeEnum.BOLETO);
         billProcessor.payBill(bill2, PaymentTypeEnum.BOLETO);
 
@@ -139,17 +127,16 @@ class BillProcessorTest {
 
         billProcessor.processBills(bills);
 
-        assertEquals(InvoiceStatusEnum.PAGA, invoice.getStatus());
+        assertEquals(InvoiceStatusEnum.PAGA, invoiceWithFutureDate.getStatus());
     }
 
     @Test
+    @DisplayName("Should process bills not updating invoice status when value is not equal to total value")
     void shouldProcessListOfBillsNotPayingTotalInvoiceValue() {
-        Invoice invoice = new Invoice(LocalDate.now().plusDays(2), 30.0, "customer");
+        Double value = INVOICE_VALUE / 2;
+        Bill bill1 = new Bill(invoiceWithFutureDate, "code", LocalDate.now(), value);
+        Bill bill2 = new Bill(invoiceWithFutureDate, "code2", LocalDate.now(), value - 3);
 
-        Bill bill1 = new Bill(invoice, "code", LocalDate.now(), 15.0);
-        Bill bill2 = new Bill(invoice, "code2", LocalDate.now(), 14.0);
-
-        BillProcessor billProcessor = new BillProcessor();
         billProcessor.payBill(bill1, PaymentTypeEnum.BOLETO);
         billProcessor.payBill(bill2, PaymentTypeEnum.BOLETO);
 
@@ -159,17 +146,16 @@ class BillProcessorTest {
 
         billProcessor.processBills(bills);
 
-        assertEquals(InvoiceStatusEnum.PENDENTE, invoice.getStatus());
+        assertEquals(InvoiceStatusEnum.PENDENTE, invoiceWithFutureDate.getStatus());
     }
 
     @Test
+    @DisplayName("Should process payments when paid value is bigger than invoice value, updating invoice status")
     void shouldProcessListOfBillsPayingMoreThanTotalInvoiceValue() {
-        Invoice invoice = new Invoice(LocalDate.now().plusDays(2), 30.0, "customer");
+        Double value = INVOICE_VALUE / 2;
+        Bill bill1 = new Bill(invoiceWithFutureDate, "code", LocalDate.now(), value);
+        Bill bill2 = new Bill(invoiceWithFutureDate, "code2", LocalDate.now(), value + 3);
 
-        Bill bill1 = new Bill(invoice, "code", LocalDate.now(), 15.0);
-        Bill bill2 = new Bill(invoice, "code2", LocalDate.now(), 16.0);
-
-        BillProcessor billProcessor = new BillProcessor();
         billProcessor.payBill(bill1, PaymentTypeEnum.BOLETO);
         billProcessor.payBill(bill2, PaymentTypeEnum.BOLETO);
 
@@ -179,6 +165,6 @@ class BillProcessorTest {
 
         billProcessor.processBills(bills);
 
-        assertEquals(InvoiceStatusEnum.PAGA, invoice.getStatus());
+        assertEquals(InvoiceStatusEnum.PAGA, invoiceWithFutureDate.getStatus());
     }
 }
