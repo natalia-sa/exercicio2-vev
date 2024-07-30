@@ -3,6 +3,7 @@ package bill_processor;
 import bill_processor.controller.payment.PaymentController;
 import bill_processor.model.bill.Bill;
 import bill_processor.model.invoice.Invoice;
+import bill_processor.model.invoice.enums.InvoiceStatusEnum;
 import bill_processor.model.payment.Payment;
 import bill_processor.model.payment.enums.PaymentTypeEnum;
 
@@ -60,6 +61,23 @@ public class BillProcessor {
             Invoice invoice = bill.getInvoice();
             this.invoices.putIfAbsent(invoice, new ArrayList<>());
             this.invoices.get(invoice).add(bill);
+            updateInvoiceStatusIfTotalValueWasPaid(invoice);
         });
+    }
+
+    private void updateInvoiceStatusIfTotalValueWasPaid(Invoice invoice) {
+        Double invoiceValue = invoice.getTotalValue();
+        List<Bill> bills = this.invoices.get(invoice);
+        Double paidValue = 0.0;
+
+        for(Bill bill : bills) {
+            if(bill.getPayment() != null) {
+                paidValue += bill.getPayment().getValue();
+            }
+        }
+
+        if(paidValue >= invoiceValue) {
+            invoice.setStatus(InvoiceStatusEnum.PAGA);
+        }
     }
 }
