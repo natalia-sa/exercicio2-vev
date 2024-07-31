@@ -3,6 +3,10 @@ package ticket_system;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
+import ticket_system.models.Ticket;
+import ticket_system.models.TicketStatus;
+import ticket_system.models.TicketType;
+import ticket_system.ticket.controllers.TicketController;
 
 
 class TicketTest {
