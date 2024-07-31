@@ -11,17 +11,16 @@ class TicketTest {
     void shouldCreateTicket() {
         int id = 1;
         TicketType ticketType = TicketType.MEIA_ENTRADA;
-        boolean isSold = false;
+        TicketStatus ticketStatus = TicketStatus.NOT_SOLD;
+        double price = 20.0;
 
-        Ticket expectedTicket = new Ticket(id, ticketType, isSold);
+        Ticket expectedTicket = new Ticket(id, ticketType, ticketStatus, price);
 
         TicketController ticketController = new TicketController();
 
         Ticket ticket = ticketController.create();
 
         assertEquals(expectedTicket, ticket);
-
-
 
     }
 }
