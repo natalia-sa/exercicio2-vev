@@ -10,4 +10,12 @@ public class TicketService {
     public Ticket create(int id, TicketType ticketType, double price) {
         return new Ticket(id, ticketType, price);
     }
+
+    public void sellTicket(Ticket ticket) throws TicketAlreadySoldException {
+        if (ticket.getTicketStatus().equals(TicketStatus.SOLD)) {
+            throw new TicketAlreadySoldException("Can't sell a ticket that already sold");
+        }
+
+        ticket.sell();
+    }
 }
