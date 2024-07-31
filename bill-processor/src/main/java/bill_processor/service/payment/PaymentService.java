@@ -12,7 +12,7 @@ public class PaymentService {
     private static final Double BOLETO_MAXIMUM_VALUE = 5000.0;
 
     public Payment create(Double value, LocalDate date, PaymentTypeEnum type) {
-        if(type.equals(PaymentTypeEnum.BOLETO) && (value < BOLETO_MINIMUM_VALUE|| value > BOLETO_MAXIMUM_VALUE)) {
+        if(type.equals(PaymentTypeEnum.BOLETO) && (value < BOLETO_MINIMUM_VALUE || value > BOLETO_MAXIMUM_VALUE)) {
             throw new InvalidPaymentDataException();
         }
 
