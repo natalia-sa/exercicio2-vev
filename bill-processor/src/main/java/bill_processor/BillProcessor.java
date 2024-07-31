@@ -26,19 +26,19 @@ public class BillProcessor {
         this.invoices = new HashMap<>();
     }
 
-    public Payment payBill(Bill bill, PaymentTypeEnum type) {
-        validatePayment(bill, type);
+    public Payment payBill(Bill bill, PaymentTypeEnum paymentType) {
+        validatePayment(bill, paymentType);
 
         Double paymentValue = bill.getValue();
 
-        boolean isTypeBoletoAndPaymentDateIsAfterBillDate = type.equals(PaymentTypeEnum.BOLETO)
+        boolean isTypeBoletoAndPaymentDateIsAfterBillDate = paymentType.equals(PaymentTypeEnum.BOLETO)
                 && LocalDate.now().isAfter(bill.getDate());
 
         if(isTypeBoletoAndPaymentDateIsAfterBillDate) {
             paymentValue = bill.getValue() + (bill.getValue() * BOLETO_FEE);
         }
 
-        Payment payment = paymentService.create(paymentValue, LocalDate.now(), type);
+        Payment payment = paymentService.create(paymentValue, LocalDate.now(), paymentType);
         bill.setPayment(payment);
 
         return payment;
