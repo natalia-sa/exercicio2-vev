@@ -6,7 +6,7 @@ import ticket_system.models.TicketType;
 
 public class TicketController {
 
-    public Ticket create() {
-        return new Ticket(1, TicketType.MEIA_ENTRADA, TicketStatus.NOT_SOLD, 20.0);
+    public Ticket create(int id, TicketType ticketType, double price) {
+        return new Ticket(id, ticketType, price);
     }
 }

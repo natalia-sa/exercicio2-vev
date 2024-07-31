@@ -13,21 +13,17 @@ public class Ticket {
     private TicketStatus ticketStatus;
     private final double price;
 
-    public Ticket(int id, TicketType ticketType, TicketStatus ticketStatus, double price) {
+    public Ticket(int id, TicketType ticketType, double price) {
         this.id = id;
         this.ticketType = ticketType;
-        this.ticketStatus = ticketStatus;
+        this.ticketStatus = TicketStatus.NOT_SOLD;
         this.price = price;
     }
 
     public double getPrice() {
         return price;
     }
-
-    public void sell() {
-        this.ticketStatus = TicketStatus.SOLD;
-    }
-
+    
     public TicketStatus getTicketStatus() {
         return ticketStatus;
     }
