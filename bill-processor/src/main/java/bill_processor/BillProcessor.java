@@ -46,12 +46,13 @@ public class BillProcessor {
 
     private void validatePayment(Bill bill, PaymentTypeEnum type) {
         LocalDate invoiceDate = bill.getInvoice().getDate();
-        LocalDate invoiceDateMinus15Days = invoiceDate.minusDays(MINIMUM_DAYS_IN_ADVANCE_TO_PAY_WITH_CARTAO_CREDITO);
+        LocalDate invoiceDateMinusMinimumDaysInAdvance =
+                invoiceDate.minusDays(MINIMUM_DAYS_IN_ADVANCE_TO_PAY_WITH_CARTAO_CREDITO);
         LocalDate billDate = bill.getDate();
 
         boolean isBillDateAfterInvoiceDate = billDate.isAfter(invoiceDate);
         boolean isPaymentTypeCartaoCreditoAndDateIsValid = type.equals(PaymentTypeEnum.CARTAO_CREDITO)
-                && invoiceDateMinus15Days.isBefore(billDate);
+                && invoiceDateMinusMinimumDaysInAdvance.isBefore(billDate);
 
         if(isBillDateAfterInvoiceDate || isPaymentTypeCartaoCreditoAndDateIsValid) {
             throw new InvalidBillDataException();
