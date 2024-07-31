@@ -2,6 +2,7 @@ package ticket_system;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ticket_system.models.Ticket;
 import ticket_system.models.TicketStatus;
@@ -10,6 +11,14 @@ import ticket_system.ticket.controllers.TicketController;
 
 
 class TicketTest {
+    private Ticket notSoldTicket;
+
+    @BeforeEach
+    void setup() {
+
+        this.notSoldTicket = new Ticket(1, TicketType.VIP, 20.0);
+
+    }
 
     @Test
     void shouldCreateTicket() {
@@ -26,6 +35,12 @@ class TicketTest {
         assertEquals(expectedTicket, ticket);
 
     }
+    
+    @Test
+    void shouldUpdateTicketStatusWhenSellTicket() {
+        this.notSoldTicket.sell();
 
+        assertEquals(TicketStatus.SOLD, this.notSoldTicket.getTicketStatus());
 
+    }
 }
