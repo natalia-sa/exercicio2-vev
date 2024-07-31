@@ -3,15 +3,13 @@ package ticket_system;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ticket_system.models.Concert;
-import ticket_system.models.Ticket;
-import ticket_system.models.TicketType;
 import ticket_system.service.ConcertService;
 
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ConcertTest {
+public class ConcertServiceTest {
 
     private ConcertService concertService;
 

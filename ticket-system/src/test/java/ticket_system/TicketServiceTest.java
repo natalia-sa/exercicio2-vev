@@ -12,7 +12,7 @@ import ticket_system.models.TicketType;
 import ticket_system.service.TicketService;
 
 
-class TicketTest {
+class TicketServiceTest {
     private Ticket notSoldTicket;
     private TicketService ticketService;
 
