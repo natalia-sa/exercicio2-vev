@@ -30,7 +30,7 @@ public class ConcertTest {
 
         Concert expectedConcert = new Concert(date, artist, cache, infrastructureCosts, isInSpecialDate);
 
-        Concert concert = this.concertService.create();
+        Concert concert = this.concertService.create(date, artist, cache, infrastructureCosts, isInSpecialDate);
 
         assertEquals(concert, expectedConcert);
     }

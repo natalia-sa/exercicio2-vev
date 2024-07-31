@@ -6,7 +6,7 @@ import java.time.LocalDate;
 
 public class ConcertService {
 
-    public Concert create() {
-        return new Concert(LocalDate.of(2020, 12, 10), "Japãozinho", 2000, 2000, false);
+    public Concert create(LocalDate date, String artist, double cache, double infrastructureCosts, boolean isInSpecialDate) {
+        return new Concert(date, artist, cache, infrastructureCosts, isInSpecialDate);
     }
 }
