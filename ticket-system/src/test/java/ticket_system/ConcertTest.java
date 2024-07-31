@@ -2,8 +2,10 @@ package ticket_system;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ticket_system.models.Concert;
 import ticket_system.models.Ticket;
 import ticket_system.models.TicketType;
+import ticket_system.service.ConcertService;
 
 import java.time.LocalDate;
 
@@ -20,7 +22,7 @@ public class ConcertTest {
 
     @Test
     void shouldCreateConcert() {
-        LocalDate date = LocalDate.now();
+        LocalDate date = LocalDate.of(2020, 12, 10);
         String artist = "Japãozinho";
         double cache = 2000;
         double infrastructureCosts = 2000;
