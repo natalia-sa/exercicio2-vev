@@ -1,4 +1,4 @@
-package ticket_system.ticket.service;
+package ticket_system.service;
 
 import ticket_system.exceptions.TicketAlreadySoldException;
 import ticket_system.models.Ticket;

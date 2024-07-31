@@ -9,7 +9,7 @@ import ticket_system.exceptions.TicketAlreadySoldException;
 import ticket_system.models.Ticket;
 import ticket_system.models.TicketStatus;
 import ticket_system.models.TicketType;
-import ticket_system.ticket.service.TicketService;
+import ticket_system.service.TicketService;
 
 
 class TicketTest {
