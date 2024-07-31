@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class BillProcessor {
 
@@ -71,16 +72,22 @@ public class BillProcessor {
     private void updateInvoiceStatusIfTotalValueWasPaid(Invoice invoice) {
         Double invoiceValue = invoice.getTotalValue();
         List<Bill> bills = this.invoices.get(invoice);
-        Double paidValue = 0.0;
-
-        for(Bill bill : bills) {
-            if(bill.getPayment() != null) {
-                paidValue += bill.getPayment().getValue();
-            }
-        }
+        Double paidValue = sumBillsTotalPaidValue(bills);
 
         if(paidValue >= invoiceValue) {
             invoice.setStatus(InvoiceStatusEnum.PAGA);
         }
+    }
+
+    private Double sumBillsTotalPaidValue(List<Bill> bills) {
+        AtomicReference<Double> paidValue = new AtomicReference<>(0.0);
+
+        bills.forEach(bill -> {
+            if(bill.getPayment() != null) {
+                paidValue.updateAndGet(v -> v + bill.getPayment().getValue());
+            }
+        });
+
+        return paidValue.get();
     }
 }
