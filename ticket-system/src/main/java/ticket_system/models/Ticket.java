@@ -20,10 +20,14 @@ public class Ticket {
         this.price = price;
     }
 
+    public void sell() {
+        this.ticketStatus = TicketStatus.SOLD;
+    }
+
     public double getPrice() {
         return price;
     }
-    
+
     public TicketStatus getTicketStatus() {
         return ticketStatus;
     }

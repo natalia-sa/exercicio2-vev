@@ -35,9 +35,11 @@ class TicketTest {
         assertEquals(expectedTicket, ticket);
 
     }
-    
+
     @Test
     void shouldUpdateTicketStatusWhenSellTicket() {
+        assertEquals(TicketStatus.NOT_SOLD, this.notSoldTicket.getTicketStatus());
+
         this.notSoldTicket.sell();
 
         assertEquals(TicketStatus.SOLD, this.notSoldTicket.getTicketStatus());
