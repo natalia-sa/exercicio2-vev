@@ -1,6 +1,7 @@
 package ticket_system;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,5 +46,13 @@ class TicketTest {
 
         assertEquals(TicketStatus.SOLD, this.notSoldTicket.getTicketStatus());
 
+    }
+
+    @Test
+    void shouldThrowExceptionWhenTryToSellATicketThatAlreadySold() throws TicketAlreadySoldException {
+        this.notSoldTicket.sell();
+        assertThrows(TicketAlreadySoldException.class, ()->{
+            this.ticketService.sellTicket(this.notSoldTicket);
+        });
     }
 }
