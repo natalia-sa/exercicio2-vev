@@ -30,7 +30,7 @@ public class TicketLotServiceTest {
 
         TicketLot expectedTicketLot = new TicketLot(id, tickets, applicableDiscount);
 
-        TicketLot ticketLot = this.ticketLotService.create();
+        TicketLot ticketLot = this.ticketLotService.create(id, tickets, applicableDiscount);
 
         assertEquals(ticketLot, expectedTicketLot);
     }

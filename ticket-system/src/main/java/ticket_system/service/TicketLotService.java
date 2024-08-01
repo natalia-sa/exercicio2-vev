@@ -3,11 +3,11 @@ package ticket_system.service;
 import ticket_system.models.Ticket;
 import ticket_system.models.TicketLot;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class TicketLotService {
 
-    public TicketLot create() {
-        return new TicketLot(1, new ArrayList<Ticket>(), 0.5);
+    public TicketLot create(int id, List<Ticket> tickets, double applicableDiscount) {
+        return new TicketLot(id, tickets, applicableDiscount);
     }
 }
