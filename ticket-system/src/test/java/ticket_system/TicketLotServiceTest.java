@@ -52,8 +52,8 @@ public class TicketLotServiceTest {
     void shouldThrowExceptionCaseVipTicketsIsLowerThan20PercentOfTotalTicket() {
         // 19 Vip Tickets, 10 Meia entrada tickets, 71 normal tickets. Total of 100 tickets and vip tickets are 19%
         List<Ticket> vipTickets = this.generateTickets(19, TicketType.VIP); // 19 Vip tickets
-        List<Ticket> meiaEntradaTickets = this.generateTickets(10, TicketType.VIP); // 10 meia entrada tickets
-        List<Ticket> normalTickets = this.generateTickets(71, TicketType.VIP); // 71 normal tickets
+        List<Ticket> meiaEntradaTickets = this.generateTickets(10, TicketType.MEIA_ENTRADA); // 10 meia entrada tickets
+        List<Ticket> normalTickets = this.generateTickets(71, TicketType.NORMAL); // 71 normal tickets
 
         List<Ticket> allTickets = new ArrayList<>();
 
@@ -74,8 +74,8 @@ public class TicketLotServiceTest {
     void shouldThrowExceptionCaseVipTicketsIsMoreThan30PercentOfTotalTickets() {
         // 31 Vip Tickets, 10 Meia entrada tickets, 59 normal tickets. Total of 100 tickets and vip tickets are 31%
         List<Ticket> vipTickets = this.generateTickets(31, TicketType.VIP); // 19 Vip tickets
-        List<Ticket> meiaEntradaTickets = this.generateTickets(10, TicketType.VIP); // 10 meia entrada tickets
-        List<Ticket> normalTickets = this.generateTickets(59, TicketType.VIP); // 59 normal tickets
+        List<Ticket> meiaEntradaTickets = this.generateTickets(10, TicketType.MEIA_ENTRADA); // 10 meia entrada tickets
+        List<Ticket> normalTickets = this.generateTickets(59, TicketType.NORMAL); // 59 normal tickets
 
         List<Ticket> allTickets = new ArrayList<>();
 
@@ -89,6 +89,28 @@ public class TicketLotServiceTest {
         assertThrows(TicketLotConfigurationException.class, ()->{
             this.ticketLotService.create(id, allTickets, applicableDiscount);
         });
+
+    }
+
+    @Test
+    void shouldThrowExceptionCaseMeiaEntradaTicketsAreMoreThan10PercentOfTotalTickets() throws TicketLotConfigurationException {
+        // 30 Vip Tickets, 11 Meia entrada tickets, 59 normal tickets. Total of 100 tickets and meia entrada tickets are 11%
+        List<Ticket> vipTickets = this.generateTickets(30, TicketType.VIP); // 19 Vip tickets
+        List<Ticket> meiaEntradaTickets = this.generateTickets(11, TicketType.MEIA_ENTRADA); // 10 meia entrada tickets
+        List<Ticket> normalTickets = this.generateTickets(59, TicketType.NORMAL); // 59 normal tickets
+
+        List<Ticket> allTickets = new ArrayList<>();
+
+        allTickets.addAll(vipTickets);
+        allTickets.addAll(meiaEntradaTickets);
+        allTickets.addAll(normalTickets);
+
+        int id = 1;
+        double applicableDiscount = 0.1;
+        assertThrows(TicketLotConfigurationException.class, ()->{
+            this.ticketLotService.create(id, allTickets, applicableDiscount);
+        });
+
 
     }
 
