@@ -17,11 +17,29 @@ public class TicketLotService {
 
     private void validateTicketsDistribution(List<Ticket> tickets) throws TicketLotConfigurationException {
         this.validateVipTicketDistribution(tickets);
+        this.validateMeiaEntradaTicketDistribution(tickets);
+    }
+
+    private void validateMeiaEntradaTicketDistribution(List<Ticket> tickets) throws TicketLotConfigurationException {
+        this.validateIfMeiaEntradaTicketsAreMoreThan10PercentOfTotalTickets(tickets);
     }
 
     private void validateVipTicketDistribution(List<Ticket> tickets) throws TicketLotConfigurationException {
         this.validateIfVipTicketsAreLessThan20PercentOfTotalTickets(tickets);
         this.validateIfVipTicketsAreMoreThan30PercentOfTotalTickets(tickets);
+    }
+
+    private void validateIfMeiaEntradaTicketsAreMoreThan10PercentOfTotalTickets(List<Ticket> tickets) throws TicketLotConfigurationException {
+        int totalMeiaEntradaTickets = this.getTicketsByType(tickets, TicketType.MEIA_ENTRADA).size();
+        int totalTickets = tickets.size();
+
+        double TEN_PERCENT = 0.10;
+        double tenPercentOfTotal = totalTickets * TEN_PERCENT;
+
+        if (totalMeiaEntradaTickets > tenPercentOfTotal) {
+            throw new TicketLotConfigurationException("Meia Entrada tickets are more than 10% of total tickets. Meia Entrada Tickets should be 10% of total tickets.");
+        }
+
     }
 
     private void validateIfVipTicketsAreLessThan20PercentOfTotalTickets(List<Ticket> tickets) throws TicketLotConfigurationException {
@@ -53,7 +71,7 @@ public class TicketLotService {
 
     private List<Ticket> getTicketsByType(List<Ticket> tickets, TicketType type) {
         return tickets.stream()
-                .filter(ticket -> ticket.getTicketType() == type)
+                .filter(ticket -> ticket.getTicketType().equals(type))
                 .collect(Collectors.toList());
     }
 
