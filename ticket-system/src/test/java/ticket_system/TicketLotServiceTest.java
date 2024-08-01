@@ -35,5 +35,16 @@ public class TicketLotServiceTest {
         assertEquals(ticketLot, expectedTicketLot);
     }
 
+    @Test
+    void maxDiscountShouldBe25Percent() {
+        int id = 1;
+        List<Ticket> tickets = new ArrayList<Ticket>();
+        double applicableDiscount = 0.5;
+
+        TicketLot ticketLot = this.ticketLotService.create(id, tickets, applicableDiscount);
+
+        assertEquals(0.25, ticketLot.getApplicableDiscount());
+    }
+
 
 }
