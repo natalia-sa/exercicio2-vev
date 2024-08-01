@@ -2,17 +2,13 @@ package ticket_system;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ticket_system.exceptions.TicketAlreadySoldException;
-import ticket_system.models.Concert;
+import ticket_system.exceptions.TicketLotConfigurationException;
 import ticket_system.models.Ticket;
 import ticket_system.models.TicketLot;
 import ticket_system.models.TicketType;
-import ticket_system.service.ConcertService;
 import ticket_system.service.TicketLotService;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -29,7 +25,7 @@ public class TicketLotServiceTest {
     }
 
     @Test
-    void shouldCreateConcert() {
+    void shouldCreateConcert() throws TicketLotConfigurationException {
         int id = 1;
         List<Ticket> tickets = new ArrayList<Ticket>();
         double applicableDiscount = 0.5;
@@ -42,7 +38,7 @@ public class TicketLotServiceTest {
     }
 
     @Test
-    void maxDiscountShouldBe25Percent() {
+    void maxDiscountShouldBe25Percent() throws TicketLotConfigurationException {
         int id = 1;
         List<Ticket> tickets = new ArrayList<Ticket>();
         double applicableDiscount = 0.5;
