@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 
 public class TicketLotService {
 
+    private final double TEN_PERCENT = 0.10;
+
     public TicketLot create(int id, List<Ticket> tickets, double applicableDiscount) throws TicketLotConfigurationException {
         this.validateTicketsDistribution(tickets);
         return new TicketLot(id, tickets, applicableDiscount);
@@ -34,8 +36,7 @@ public class TicketLotService {
         int totalMeiaEntradaTickets = this.getTicketsByType(tickets, TicketType.MEIA_ENTRADA).size();
         int totalTickets = tickets.size();
 
-        double TEN_PERCENT = 0.10;
-        double tenPercentOfTotal = totalTickets * TEN_PERCENT;
+        double tenPercentOfTotal = totalTickets * this.TEN_PERCENT;
 
         if (totalMeiaEntradaTickets > tenPercentOfTotal) {
             throw new TicketLotConfigurationException("Meia Entrada tickets are more than 10% of total tickets. Meia Entrada Tickets should be 10% of total tickets.");
@@ -47,8 +48,7 @@ public class TicketLotService {
         int totalMeiaEntradaTickets = this.getTicketsByType(tickets, TicketType.MEIA_ENTRADA).size();
         int totalTickets = tickets.size();
 
-        double TEN_PERCENT = 0.10;
-        double tenPercentOfTotal = totalTickets * TEN_PERCENT;
+        double tenPercentOfTotal = totalTickets * this.TEN_PERCENT;
 
         if (totalMeiaEntradaTickets < tenPercentOfTotal) {
             throw new TicketLotConfigurationException("Meia Entrada tickets are less than 10% of total tickets. Meia Entrada Tickets should be 10% of total tickets.");
