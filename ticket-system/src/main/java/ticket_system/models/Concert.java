@@ -22,6 +22,10 @@ public class Concert {
         this.ticketLots = new ArrayList<>();
     }
 
+    public void addTicketLot(TicketLot ticketLot) {
+        this.ticketLots.add(ticketLot);
+    }
+
     public double getCache() {
         return cache;
     }
