@@ -53,7 +53,7 @@ public class ConcertServiceTest {
     void shouldGenerateAProfitConcertReport() {
         Concert concert = new Concert(LocalDate.of(2020, 10, 12), "Japãozinho", 1000.0, 2000.0, true);
         List<Ticket> tickets = this.createTickets(100, 350, 50);
-        TicketLot ticketLot = new TicketLot(1, tickets, 0.15);
+        TicketLot ticketLot = new TicketLot(1, tickets, 0);
         this.concertService.addTicketLotToConcert(concert, ticketLot);
 
         // Sell all tickets
@@ -64,16 +64,16 @@ public class ConcertServiceTest {
         assertEquals(100, report.getSoldVipTickets());
         assertEquals(350, report.getSoldNormalTickets());
         assertEquals(50, report.getSoldMeiaEntradatickets());
-        assertEquals(1438.0, report.getNetRevenue());
+        assertEquals(2300, report.getNetRevenue());
         assertEquals(ConcertReportStatus.PROFIT, report.getStatus());
     }
 
-    
+
     @Test
     void shouldGenerateLossConcertReport() {
-        Concert concert = new Concert(LocalDate.of(2020, 10, 12), "Japãozinho", 1000.0, 5000.0, true);
+        Concert concert = new Concert(LocalDate.of(2020, 10, 12), "Japãozinho", 1000.0, 5000.0, false);
         List<Ticket> tickets = this.createTickets(100, 350, 50);
-        TicketLot ticketLot = new TicketLot(1, tickets, 0.15);
+        TicketLot ticketLot = new TicketLot(1, tickets, 0);
         this.concertService.addTicketLotToConcert(concert, ticketLot);
 
         // Sell all tickets
@@ -84,8 +84,26 @@ public class ConcertServiceTest {
         assertEquals(100, report.getSoldVipTickets());
         assertEquals(350, report.getSoldNormalTickets());
         assertEquals(50, report.getSoldMeiaEntradatickets());
-        assertEquals(-2012.0, report.getNetRevenue());
+        assertEquals(-250, report.getNetRevenue());
         assertEquals(ConcertReportStatus.LOSS, report.getStatus());
+    }
+
+    @Test
+    void shouldGenerateStableConcertReport() {
+        Concert concert = new Concert(LocalDate.of(2020, 10, 12), "Japãozinho", 3000, 2750, false);
+        List<Ticket> tickets = this.createTickets(100, 350, 50);
+        TicketLot ticketLot = new TicketLot(1, tickets, 0);
+        this.concertService.addTicketLotToConcert(concert, ticketLot);
+        // Sell all tickets
+        tickets.forEach(Ticket::sell);
+
+        ConcertReport report = concertService.generateConcertReport(concert);
+
+        assertEquals(100, report.getSoldVipTickets());
+        assertEquals(350, report.getSoldNormalTickets());
+        assertEquals(50, report.getSoldMeiaEntradatickets());
+        assertEquals(0, report.getNetRevenue());
+        assertEquals(ConcertReportStatus.STABLE, report.getStatus());
     }
 
     private List<Ticket> createTickets(int viptickets, int normalTickets, int meiaEntradaTickets) {
