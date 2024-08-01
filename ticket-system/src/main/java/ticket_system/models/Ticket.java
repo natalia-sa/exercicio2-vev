@@ -20,12 +20,16 @@ public class Ticket {
         this.price = price;
     }
 
+    public boolean isSold() {
+        return this.ticketStatus.equals(TicketStatus.SOLD);
+    }
+
     public void sell() {
         this.ticketStatus = TicketStatus.SOLD;
     }
 
-    public double getPrice() {
-        return price;
+    public double getPrice(double applicableDiscount) {
+        return this.price * (1 - applicableDiscount);
     }
 
     public TicketStatus getTicketStatus() {

@@ -2,10 +2,7 @@ package ticket_system;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ticket_system.models.Concert;
-import ticket_system.models.Ticket;
-import ticket_system.models.TicketLot;
-import ticket_system.models.TicketType;
+import ticket_system.models.*;
 import ticket_system.service.ConcertService;
 
 import java.time.LocalDate;
@@ -64,11 +61,11 @@ public class ConcertServiceTest {
 
         ConcertReport report = concertService.generateConcertReport(concert);
 
-        assertEquals(100, report.getSoldVipVendidos());
-        assertEquals(350, report.getSoldNormaisVendidos());
-        assertEquals(50, report.getSoldMeiaEntradaVendidos());
-        assertEquals(1625.0, report.getNetRevenue());
-        assertEquals(ConcertReportStatus.PROFIT, report.getStatusFinanceiro());
+        assertEquals(100, report.getSoldVipTickets());
+        assertEquals(350, report.getSoldNormalTickets());
+        assertEquals(50, report.getSoldMeiaEntradatickets());
+        assertEquals(1438.0, report.getNetRevenue());
+        assertEquals(ConcertReportStatus.PROFIT, report.getStatus());
     }
 
     private List<Ticket> createTickets(int viptickets, int normalTickets, int meiaEntradaTickets) {
