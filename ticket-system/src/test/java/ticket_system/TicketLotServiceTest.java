@@ -6,6 +6,7 @@ import ticket_system.models.Concert;
 import ticket_system.models.Ticket;
 import ticket_system.models.TicketLot;
 import ticket_system.service.ConcertService;
+import ticket_system.service.TicketLotService;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
