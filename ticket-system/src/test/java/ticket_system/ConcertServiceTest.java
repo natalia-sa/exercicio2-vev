@@ -68,6 +68,26 @@ public class ConcertServiceTest {
         assertEquals(ConcertReportStatus.PROFIT, report.getStatus());
     }
 
+    
+    @Test
+    void shouldGenerateLossConcertReport() {
+        Concert concert = new Concert(LocalDate.of(2020, 10, 12), "Japãozinho", 1000.0, 5000.0, true);
+        List<Ticket> tickets = this.createTickets(100, 350, 50);
+        TicketLot ticketLot = new TicketLot(1, tickets, 0.15);
+        this.concertService.addTicketLotToConcert(concert, ticketLot);
+
+        // Sell all tickets
+        tickets.forEach(Ticket::sell);
+
+        ConcertReport report = concertService.generateConcertReport(concert);
+
+        assertEquals(100, report.getSoldVipTickets());
+        assertEquals(350, report.getSoldNormalTickets());
+        assertEquals(50, report.getSoldMeiaEntradatickets());
+        assertEquals(-2012.0, report.getNetRevenue());
+        assertEquals(ConcertReportStatus.LOSS, report.getStatus());
+    }
+
     private List<Ticket> createTickets(int viptickets, int normalTickets, int meiaEntradaTickets) {
         List<Ticket> tickets = new ArrayList<>();
         for (int i = 0; i < viptickets; i++) {
