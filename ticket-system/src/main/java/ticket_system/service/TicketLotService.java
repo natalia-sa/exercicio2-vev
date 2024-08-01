@@ -21,6 +21,7 @@ public class TicketLotService {
 
     private void validateVipTicketDistribution(List<Ticket> tickets) throws TicketLotConfigurationException {
         this.validateIfVipTicketsAreLessThan20PercentOfTotalTickets(tickets);
+        this.validateIfVipTicketsAreMoreThan30PercentOfTotalTickets(tickets);
     }
 
     private void validateIfVipTicketsAreLessThan20PercentOfTotalTickets(List<Ticket> tickets) throws TicketLotConfigurationException {
@@ -32,6 +33,19 @@ public class TicketLotService {
 
         if (totalVipTickets < twentyPercentOfTotal) {
             throw new TicketLotConfigurationException("Vip tickets are less than 20% of total tickets. Vip Tickets should be beetwen 20% and 30% of total tickets.");
+        }
+
+    }
+
+    private void validateIfVipTicketsAreMoreThan30PercentOfTotalTickets(List<Ticket> tickets) throws TicketLotConfigurationException {
+        int totalVipTickets = this.getTicketsByType(tickets, TicketType.VIP).size();
+        int totalTickets = tickets.size();
+
+        double THIRTY_PERCENT = 0.30;
+        double thirtyPercentOfTotal = totalTickets * THIRTY_PERCENT;
+
+        if (totalVipTickets > thirtyPercentOfTotal) {
+            throw new TicketLotConfigurationException("Vip tickets are more than 30% of total tickets. Vip Tickets should be beetwen 20% and 30% of total tickets.");
         }
 
     }
