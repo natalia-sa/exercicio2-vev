@@ -77,4 +77,128 @@ class DecisionTableTest {
 
         assertNull(bill.getPayment());
     }
+
+    @Test
+    @DisplayName("Should throw exception when trying to pay a bill which date is after invoice date, payment date is after invoice date and payment type is boleto")
+    void shouldNotBePossibleToPayWhenBillDateIsAfterInvoiceAndPaymentDateIsAfterBillDate() {
+        Invoice invoice = invoiceWithFutureDate.setDate(LocalDate.now().minusDays(2));
+        LocalDate date = LocalDate.now().minusDays(1);
+        Bill bill = new Bill(invoice, "code", date, INVOICE_VALUE);
+
+        assertThrows(InvalidBillDataException.class, ()->{
+            billProcessor.payBill(bill, PaymentTypeEnum.BOLETO);
+        });
+
+        assertNull(bill.getPayment());
+    }
+
+    @Test
+    @DisplayName("Should throw exception when trying to pay a bill which date is after invoice date and payment type is cartao")
+    void shouldNotBePossibleToPayWhenTypeIsCartaoAndBillDateIsNot15DaysBeforeInvoiceDateTest() {
+        Invoice invoice = invoiceWithFutureDate.setDate(LocalDate.now().minusDays(4));
+        LocalDate invalidDate = invoiceWithFutureDate.getDate().plusDays(10);
+
+        Bill bill = new Bill(invoice, "billCode", invalidDate, INVOICE_VALUE);
+
+        assertThrows(InvalidBillDataException.class, ()->{
+            billProcessor.payBill(bill, PaymentTypeEnum.CARTAO_CREDITO);
+        });
+
+        assertNull(bill.getPayment());
+    }
+
+    @Test
+    @DisplayName("Should throw exception when trying to pay a bill when payment date is after bill date and payment type is cartao")
+    void shouldNotBePossibleToPayWhenTypeIsCartaoAndPaymentDateIsAfterBillDate() {
+        LocalDate invalidDate = invoiceWithFutureDate.getDate().minusDays(10);
+
+        Bill bill = new Bill(invoiceWithFutureDate, "billCode", invalidDate, INVOICE_VALUE);
+
+        assertThrows(InvalidBillDataException.class, ()->{
+            billProcessor.payBill(bill, PaymentTypeEnum.CARTAO_CREDITO);
+        });
+
+        assertNull(bill.getPayment());
+    }
+
+    @Test
+    @DisplayName("Should pay bill when type is cartao")
+    void shouldPayBillWhenTypeIsCartao() {
+        Bill bill = new Bill(
+                invoiceWithFutureDate,
+                "billCode",
+                invoiceWithFutureDate.getDate().minusDays(15),
+                INVOICE_VALUE);
+
+        PaymentTypeEnum paymentType = PaymentTypeEnum.CARTAO_CREDITO;
+        LocalDate paymentDate = LocalDate.now();
+        Payment expectedPayment = new Payment(invoiceWithFutureDate.getTotalValue(), paymentDate, paymentType);
+
+        Payment payment = billProcessor.payBill(bill, paymentType);
+
+        assertEquals(bill.getPayment(), expectedPayment);
+        assertEquals(expectedPayment, payment);
+    }
+
+    @Test
+    @DisplayName("Should not pay bill when type is cartao and bill date is not 15 days before invoice date")
+    void shouldNotPayBillWhenTypeIsCartaoAndBillDateIsNot15DaysBeforeInvoiceDate() {
+        Bill bill = new Bill(
+                invoiceWithFutureDate,
+                "billCode",
+                invoiceWithFutureDate.getDate().minusDays(14),
+                INVOICE_VALUE);
+
+        assertThrows(InvalidBillDataException.class, ()->{
+            billProcessor.payBill(bill, PaymentTypeEnum.CARTAO_CREDITO);
+        });
+
+        assertNull(bill.getPayment());
+    }
+
+    @Test
+    @DisplayName("Should pay bill when type is transferencia")
+    void shouldPayBillWhenTypeIsTransferenciaTest() {
+        Bill bill = new Bill(
+                invoiceWithFutureDate,
+                "billCode",
+                invoiceWithFutureDate.getDate(),
+                INVOICE_VALUE);
+
+        PaymentTypeEnum paymentType = PaymentTypeEnum.TRANSFERENCIA_BANCARIA;
+        LocalDate paymentDate = LocalDate.now();
+        Payment expectedPayment = new Payment(invoiceWithFutureDate.getTotalValue(), paymentDate, paymentType);
+
+        Payment payment = billProcessor.payBill(bill, paymentType);
+
+        assertEquals(bill.getPayment(), expectedPayment);
+        assertEquals(expectedPayment, payment);
+    }
+
+    @Test
+    @DisplayName("Should pay bill with original value when type is transferencia and payment date is after bill date")
+    void shouldPayBillWithOriginalValueWhenTypeIsTransferenciaAndPaymentIsAfterBillDateTest() {
+        Bill bill = new Bill(
+                invoiceWithFutureDate,
+                "billCode",
+                invoiceWithFutureDate.getDate().minusDays(10),
+                INVOICE_VALUE);
+
+        PaymentTypeEnum paymentType = PaymentTypeEnum.TRANSFERENCIA_BANCARIA;
+        LocalDate paymentDate = LocalDate.now();
+        Payment expectedPayment = new Payment(invoiceWithFutureDate.getTotalValue(), paymentDate, paymentType);
+
+        Payment payment = billProcessor.payBill(bill, paymentType);
+
+        assertEquals(bill.getPayment(), expectedPayment);
+        assertEquals(expectedPayment, payment);
+    }
+
+    @Test
+    @DisplayName("Should not pay bill when type is tranferencia and bill date is after invoice date")
+    void shouldNotPayBillWhenTypeIsTransferenciaAndBillDateIsAfterInvoiceDate() {
+
+
+    }
+
 }
