@@ -157,6 +157,22 @@ class DecisionTableTest {
     }
 
     @Test
+    @DisplayName("Should not pay bill when type is cartao and bill date is after invoice date")
+    void shouldNotPayBillWhenTypeIsCartaoAndBillDateAfterInvoiceDate() {
+        Bill bill = new Bill(
+                invoiceWithFutureDate,
+                "billCode",
+                invoiceWithFutureDate.getDate().plusDays(10),
+                INVOICE_VALUE);
+
+        assertThrows(InvalidBillDataException.class, ()->{
+            billProcessor.payBill(bill, PaymentTypeEnum.CARTAO_CREDITO);
+        });
+
+        assertNull(bill.getPayment());
+    }
+
+    @Test
     @DisplayName("Should pay bill when type is transferencia")
     void shouldPayBillWhenTypeIsTransferenciaTest() {
         Bill bill = new Bill(
@@ -197,8 +213,17 @@ class DecisionTableTest {
     @Test
     @DisplayName("Should not pay bill when type is tranferencia and bill date is after invoice date")
     void shouldNotPayBillWhenTypeIsTransferenciaAndBillDateIsAfterInvoiceDate() {
+        Bill bill = new Bill(
+                invoiceWithFutureDate,
+                "billCode",
+                invoiceWithFutureDate.getDate().plusDays(10),
+                INVOICE_VALUE);
 
+        assertThrows(InvalidBillDataException.class, ()->{
+            billProcessor.payBill(bill, PaymentTypeEnum.TRANSFERENCIA_BANCARIA);
+        });
 
+        assertNull(bill.getPayment());
     }
 
 }
