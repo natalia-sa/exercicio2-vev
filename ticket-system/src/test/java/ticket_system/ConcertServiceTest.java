@@ -51,7 +51,7 @@ public class ConcertServiceTest {
 
     @Test
     void shouldGenerateAProfitConcertReport() {
-        Concert concert = new Concert(LocalDate.of(2020, 10, 12), "Japãozinho", 1000.0, 2000.0, true);
+        Concert concert = new Concert(LocalDate.of(2020, 10, 12), "Japãozinho", 1000.0, 2000.0, false);
         List<Ticket> tickets = this.createTickets(100, 350, 50);
         TicketLot ticketLot = new TicketLot(1, tickets, 0.15);
         this.concertService.addTicketLotToConcert(concert, ticketLot);
@@ -64,7 +64,11 @@ public class ConcertServiceTest {
         assertEquals(100, report.getSoldVipTickets());
         assertEquals(350, report.getSoldNormalTickets());
         assertEquals(50, report.getSoldMeiaEntradatickets());
+<<<<<<< Updated upstream
         assertEquals(1438.0, report.getNetRevenue());
+=======
+        assertEquals(2750, report.getNetRevenue());
+>>>>>>> Stashed changes
         assertEquals(ConcertReportStatus.PROFIT, report.getStatus());
     }
 
@@ -105,6 +109,42 @@ public class ConcertServiceTest {
         assertEquals(50, report.getSoldMeiaEntradatickets());
         assertEquals(0, report.getNetRevenue());
         assertEquals(ConcertReportStatus.STABLE, report.getStatus());
+    }
+
+    @Test
+    void shouldApplyDiscountInSpecialDate() {
+        Concert concert = new Concert(LocalDate.of(2020, 10, 12), "Japãozinho", 1000.0, 2000.0, true);
+        List<Ticket> tickets = this.createTickets(100, 350, 50);
+        TicketLot ticketLot = new TicketLot(1, tickets, 0);
+        this.concertService.addTicketLotToConcert(concert, ticketLot);
+        // Sell all tickets
+        tickets.forEach(Ticket::sell);
+
+        ConcertReport report = concertService.generateConcertReport(concert);
+
+        assertEquals(100, report.getSoldVipTickets());
+        assertEquals(350, report.getSoldNormalTickets());
+        assertEquals(50, report.getSoldMeiaEntradatickets());
+        assertEquals(3250, report.getNetRevenue());
+        assertEquals(ConcertReportStatus.PROFIT, report.getStatus());
+    }
+
+    @Test
+    void shouldNotApplyDiscountInSpecialDate() {
+        Concert concert = new Concert(LocalDate.of(2020, 10, 12), "Japãozinho", 1000.0, 2000.0, false);
+        List<Ticket> tickets = this.createTickets(100, 350, 50);
+        TicketLot ticketLot = new TicketLot(1, tickets, 0);
+        this.concertService.addTicketLotToConcert(concert, ticketLot);
+        // Sell all tickets
+        tickets.forEach(Ticket::sell);
+
+        ConcertReport report = concertService.generateConcertReport(concert);
+
+        assertEquals(100, report.getSoldVipTickets());
+        assertEquals(350, report.getSoldNormalTickets());
+        assertEquals(50, report.getSoldMeiaEntradatickets());
+        assertEquals(2750, report.getNetRevenue());
+        assertEquals(ConcertReportStatus.PROFIT, report.getStatus());
     }
 
     private List<Ticket> createTickets(int viptickets, int normalTickets, int meiaEntradaTickets) {
