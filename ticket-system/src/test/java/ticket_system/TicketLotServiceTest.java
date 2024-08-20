@@ -2,6 +2,8 @@ package ticket_system;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import ticket_system.exceptions.TicketLotConfigurationException;
 import ticket_system.models.Ticket;
 import ticket_system.models.TicketLot;
@@ -11,8 +13,7 @@ import ticket_system.service.TicketLotService;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TicketLotServiceTest {
     private TicketLotService ticketLotService;
@@ -38,14 +39,25 @@ public class TicketLotServiceTest {
     }
 
     @Test
-    void maxDiscountShouldBe25Percent() throws TicketLotConfigurationException {
+    void testShouldReturnMaxDiscount() throws TicketLotConfigurationException {
         int id = 1;
-        List<Ticket> tickets = new ArrayList<Ticket>();
+        List<Ticket> tickets = new ArrayList<>();
         double applicableDiscount = 0.5;
 
         TicketLot ticketLot = this.ticketLotService.create(id, tickets, applicableDiscount);
 
         assertEquals(0.25, ticketLot.getApplicableDiscount());
+    }
+
+    @Test
+    void testShouldReturnZeroDiscount() throws TicketLotConfigurationException {
+        int id = 1;
+        List<Ticket> tickets = new ArrayList<>();
+        double applicableDiscount = -1;
+
+        TicketLot ticketLot = this.ticketLotService.create(id, tickets, applicableDiscount);
+
+        assertEquals(0, ticketLot.getApplicableDiscount());
     }
 
     @Test

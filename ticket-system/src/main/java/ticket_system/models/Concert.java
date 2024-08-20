@@ -33,13 +33,13 @@ public class Concert {
     }
 
     private double getTotalCosts() {
-        double totalCosts = this.cache + this.infrastructureCosts;
-
-        double DISCOUNT_FOR_SPECIAL_DAYS = 1.15;
+        double infrastructureCosts = this.infrastructureCosts;
+        double DISCOUNT_FOR_SPECIAL_DAYS = 0.75;
 
         if (isInSpecialDate) {
-            totalCosts *= DISCOUNT_FOR_SPECIAL_DAYS;
+            infrastructureCosts *= DISCOUNT_FOR_SPECIAL_DAYS;
         }
+        double totalCosts = this.cache + infrastructureCosts;
 
         return Math.round(totalCosts);
     }

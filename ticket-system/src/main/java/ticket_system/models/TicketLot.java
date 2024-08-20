@@ -13,7 +13,7 @@ public class TicketLot {
     public TicketLot(int id, List<Ticket> tickets, double applicableDiscount) {
         this.id = id;
         this.tickets = tickets;
-        this.applicableDiscount = Math.min(0.25, applicableDiscount);
+        this.applicableDiscount = Math.min(0.25, Math.max(applicableDiscount, 0));
     }
 
 
