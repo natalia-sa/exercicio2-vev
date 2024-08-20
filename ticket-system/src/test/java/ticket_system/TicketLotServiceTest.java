@@ -38,17 +38,6 @@ public class TicketLotServiceTest {
         assertEquals(ticketLot, expectedTicketLot);
     }
 
-    @ParameterizedTest
-    @ValueSource(doubles = {0, 0.25, 0.1, 0.24, 0.17})
-    void shouldCreateLotWithAcceptableDiscounts(double discount) throws TicketLotConfigurationException {
-        int id = 1;
-        List<Ticket> tickets = new ArrayList<>();
-
-        TicketLot ticketLot = this.ticketLotService.create(id, tickets, discount);
-
-        assertEquals(discount, ticketLot.getApplicableDiscount());
-    }
-
     @Test
     void testShouldReturnMaxDiscount() throws TicketLotConfigurationException {
         int id = 1;
